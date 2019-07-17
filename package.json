@@ -1,0 +1,24 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "To get started, simply run:",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "bootstrap": "^4.3.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "bundle exec middleman build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benefit-js/site.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benefit-js/site/issues"
+  },
+  "homepage": "https://benefitjs.com"
+}
