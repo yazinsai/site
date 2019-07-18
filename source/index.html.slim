@@ -22,7 +22,7 @@ title: BenefitJS, The fastest benefit integration
               h3.modal-head Go Live
               img.dot src="images/ellipse_grey.png"
           
-          form id="register-form" action="http://127.0.0.1:3666/users/register" method="post"
+          form id="register-form" 
             p.h4.mb-4
             input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
             input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
@@ -57,14 +57,13 @@ title: BenefitJS, The fastest benefit integration
             col-sm-4
               h3.modal-head Go Live
               img.dot src="images/ellipse_grey.png"
-          form action="/" method="post" enctype="multipart/form-data"
-          
-          .input-group
-            .input-group-prepend
-              span.input-group-text id="inputGroupFileAddon01" Upload 
-            .cutom-file
-              input.custom-file-input type="file" name="cgnFile" id="cgnFile" aria-describedby="inputGroupFileAddon01"
-              label.custom-file-label for="inputGroupFile01" Upload CGN
+          form id="cgn-form"           
+            .input-group
+              .input-group-prepend
+                span.input-group-text id="inputGroupFileAddon01" Upload 
+              .cutom-file
+                input.custom-file-input type="file" name="cgnFile" id="cgnFile" aria-describedby="inputGroupFileAddon01"
+                label.custom-file-label for="inputGroupFile01" Upload CGN
             
             button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
         
@@ -97,7 +96,7 @@ title: BenefitJS, The fastest benefit integration
       
 
 .container
-  .row
+  .row.row-major
     .col-md.center      
       h2 Painless, one-step integration
       .col-md.my-auto.order-md-1.center
@@ -115,8 +114,8 @@ title: BenefitJS, The fastest benefit integration
           
           p All donations are made to Khairia.org
           
-  .row.primary-bg
-    .col-md.my-auto.order-md-1.center       
+  .row.row-major.primary-bg
+    .col-md.my-auto.center       
       .display-1
         i.fa.fa-clock-o
       
@@ -131,7 +130,7 @@ title: BenefitJS, The fastest benefit integration
       p Imagine closing your sales in seconds.  
   
   .row
-    .col-md.my-auto.order-md-1.center
+    .col-md.my-auto.center.order-md-1
       .display-1
         li.fa.fa-thumbs-up
     .col-md.order-md-0
@@ -143,12 +142,13 @@ title: BenefitJS, The fastest benefit integration
         | BenefitJS seemlessly integrates with your website with a simple script
       p Design your app or website however you like.  
       
+  .row
     .col-md
       .center
         button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#" 
           | Start Now >
   
-  .row
+  .row.row-major
     .col-md
       .center
         h2 How it works
@@ -185,77 +185,123 @@ title: BenefitJS, The fastest benefit integration
       button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#"  
         | Get Started >
           
-  .row
-    .col-md
+  .row.row-major
+    .col
       .center
         h2 Pricing
 
-    .col-md
-      h2.primary-color.center.regular-font
-        | The basic, 
-        strong 100% free 
-        | Plan
-    .col-md
-      h3
-        span.billiard-ball 
-          i.fa.fa-check.fa-color
-        | Accept unlimited payments
-      h3
-        span.billiard-ball 
-          i.fa.fa-check.fa-color
-        | Easy integration, zero setup    
+      .row
+        .col.center
+          h2.primary-color.center.regular-font
+            | The basic, 
+            strong 100% free 
+            | Plan
+      .row
+        .col
+          .center
+            h3
+              span.billiard-ball 
+                i.fa.fa-check.fa-color
+              | Accept unlimited payments
+            h3
+              span.billiard-ball 
+                i.fa.fa-check.fa-color
+              | Easy integration, zero setup    
 
-    .col-md
-      .center
-        button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#"  
-          | Start Free >
+      .row
+        .col.center
+          button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#"  
+            | Start Free >
 
-  .row
-    .col-md
+  .row.row-major
+    .col
       .center
         h2.primary-color.regular-font 
           | The 
           strong Premium 
           | Plan
 
-    .col-md
-      p.center Everything in the Basic plan, plus:
-      h3 
-        span.billiard-ball 
-          i.fa.fa-check.fa-color 
-        | Recurring payments
-        .badge.badge-danger.primary-color NEW
-      h3
-        span.billiard-ball
-          i.fa.fa-check.fa-color
-        | Dashboard access
-      h3
-        span.billiard-ball 
-          i.fa.fa-check.fa-color
-        | Payment analytics 
-      h3
-        span.billiard-ball 
-          i.fa.fa-check.fa-color
-        | Priority Enterprise support 
+      .row
+        .col.center
+          p.center Everything in the Basic plan, plus:
+          h3 
+            span.billiard-ball 
+              i.fa.fa-check.fa-color 
+            | Recurring payments
+            .badge.badge-danger.primary-color NEW
+          h3
+            span.billiard-ball
+              i.fa.fa-check.fa-color
+            | Dashboard access
+          h3
+            span.billiard-ball 
+              i.fa.fa-check.fa-color
+            | Payment analytics 
+          h3
+            span.billiard-ball 
+              i.fa.fa-check.fa-color
+            | Priority Enterprise support 
       
 
-    .col-md
-      .center
-        button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#" 
-          | Contact Sales
+      .row
+        .col.center
+          button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#" 
+            | Contact Sales
 
   .row
-    .col-md
+    .col
       .center
         h2.primary-color Ready to get started?
 
-    .col-md
+    
       .center
         button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#"  
           | Get Started >
 
 javascript:
+
+  function registerData() {
+    var XHR = new XMLHttpRequest();
+    var FD = new FormData(registerForm);
+    XHR.addEventListener("load", function(event) {
+      alert(event.target.responseText);
+    });
+    XHR.addEventListener("error", function(event) {
+      alert('Oops! Something went wrong.');
+    });
+    XHR.open("POST", "http://127.0.0.1:3666/users/login");
+    XHR.withCredentials = true;
+    XHR.send(FD);
+  }
+ 
+  
+  var registerForm = document.getElementById("register-form");
+  registerForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    registerData();
+  });
    
+  function cgnData() {
+    console.log("added cgn")
+      var XHR = new XMLHttpRequest();
+      var FD = new FormData(cgnForm);
+      XHR.addEventListener("load", function(event) {
+        alert(event.target.responseText);
+      });
+      XHR.addEventListener("error", function(event) {
+        console.log("ERROR", event)
+        alert('Oops! Something went wrong.', event);
+      });
+      XHR.open("POST", "http://127.0.0.1:3666/users/upload/cgn");
+      XHR.withCredentials = true;
+      XHR.send(FD);
+    }
+    
+    var cgnForm = document.getElementById("cgn-form");
+    cgnForm.addEventListener("submit", function (event) {    
+      event.preventDefault();
+      cgnData();
+    });
 
   function isMobile() {
     var check = false;

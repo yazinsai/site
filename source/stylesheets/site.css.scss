@@ -48,11 +48,7 @@ body {
     flex-direction: column;
 
     .row-major {
-      flex: 1;
-
-      .list-of-fees {
-        height: 350px;
-      }
+      flex: 1;     
     }
     .row-minor {
       padding-bottom: 2rem;
