@@ -10,17 +10,18 @@ title: BenefitJS, The fastest benefit integration
         div
           button.close-button data-dismiss="modal" 
             img src="images/close.svg" /
-          .row.center.modal-bar
-            col-sm-4
-              h3.primary-color.modal-head 
-                strong Register
-              img.dot src="images/ellipse_red.png" 
-            col-sm-4
-              h3.modal-head Upload CGN
-              img.dot src="images/ellipse_grey.png"  
-            col-sm-4
-              h3.modal-head Go Live
-              img.dot src="images/ellipse_grey.png"
+          .col-md
+            .row.center.modal-bar
+              col-sm-4
+                h3.primary-color.modal-head 
+                  strong Register
+                img.dot src="images/ellipse_red.png" 
+              col-sm-4
+                h3.modal-head Upload CGN
+                img.dot src="images/ellipse_grey.png"  
+              col-sm-4
+                h3.modal-head Go Live
+                img.dot src="images/ellipse_grey.png"
           
           form id="register-form" 
             p.h4.mb-4
@@ -46,17 +47,18 @@ title: BenefitJS, The fastest benefit integration
         div
           button.close-button data-dismiss="modal" 
             img src="images/close.svg" /
-          .row.center.modal-bar
-            col-sm-4
-              h3.modal-head Register
-              img.dot src="images/ellipse_grey.png" 
-            col-sm-4
-              h3.primary-color.modal-head 
-                strong Upload CGN
-              img.dot src="images/ellipse_red.png"  
-            col-sm-4
-              h3.modal-head Go Live
-              img.dot src="images/ellipse_grey.png"
+          .col-md
+            .row.center.modal-bar
+              col-sm-4
+                h3.modal-head Register
+                img.dot src="images/ellipse_grey.png" 
+              col-sm-4
+                h3.primary-color.modal-head 
+                  strong Upload CGN
+                img.dot src="images/ellipse_red.png"  
+              col-sm-4
+                h3.modal-head Go Live
+                img.dot src="images/ellipse_grey.png"
           form id="cgn-form"           
             .input-group
               .input-group-prepend
@@ -67,7 +69,30 @@ title: BenefitJS, The fastest benefit integration
             
             button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
         
-
+#liveModal.modal role="dialog" tabindex="-1" data-backdrop="static"
+  .modal-dialog role="document" 
+    .modal-content
+      .modal-body.center
+        
+        div
+          button.close-button data-dismiss="modal" 
+            img src="images/close.svg" /
+          .col-md
+            .row.center.modal-bar
+              col-sm-4
+                h3.modal-head Register
+                img.dot src="images/ellipse_grey.png" 
+              col-sm-4
+                h3.modal-head Upload CGN
+                img.dot src="images/ellipse_grey.png"  
+              col-sm-4
+                h3.primary-color.modal-head 
+                  strong Go Live
+                img.dot src="images/ellipse_red.png"
+          .row
+            .col
+              h3.primary-color Your public key:
+              p id="pk-field"
           
                 
 
@@ -265,11 +290,17 @@ javascript:
     var FD = new FormData(registerForm);
     XHR.addEventListener("load", function(event) {
       alert(event.target.responseText);
+      var response=JSON.parse(event.target.responseText);      
+      if (response.status == "success")
+      {        
+        $('#uploadModal').modal('show');
+      }
+
     });
     XHR.addEventListener("error", function(event) {
       alert('Oops! Something went wrong.');
     });
-    XHR.open("POST", "http://127.0.0.1:3666/users/login");
+    XHR.open("POST", "http://127.0.0.1:3666/users/register");
     XHR.withCredentials = true;
     XHR.send(FD);
   }
@@ -281,12 +312,17 @@ javascript:
     registerData();
   });
    
-  function cgnData() {
-    console.log("added cgn")
+  function cgnData() {    
       var XHR = new XMLHttpRequest();
       var FD = new FormData(cgnForm);
       XHR.addEventListener("load", function(event) {
         alert(event.target.responseText);
+        var response=JSON.parse(event.target.responseText);             
+        if (response.status == "success")
+        {        
+          $('#liveModal').modal('show');
+          $("p#pk-field").text(response.data);
+        }
       });
       XHR.addEventListener("error", function(event) {
         console.log("ERROR", event)
