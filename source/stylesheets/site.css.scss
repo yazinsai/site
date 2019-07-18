@@ -10,7 +10,7 @@ $font-family-sans-serif: "Open Sans", sans-serif;
 $fa-font-path: "font-awesome/fonts";
 
 $headings-font-weight: bold;
-$h1-font-size: 32px;
+$h1-font-size: 36px;
 $h2-font-size: 28px;
 $h3-font-size: 20px;
 
@@ -41,16 +41,17 @@ html,
 body {
   height: 100%;
 }
-
+.row-major {
+  flex: 1;
+  padding-bottom: 47px;     
+}
 .above-the-fold {
   @include media-breakpoint-up(md) {
     height: 100%;
     display: flex;
     flex-direction: column;
 
-    .row-major {
-      flex: 1;     
-    }
+    
     .row-minor {
       padding-bottom: 2rem;
 
@@ -129,6 +130,14 @@ img {
 .regular-font{
   font-weight: normal;
 }
+.pattern{
+  background:url("../images/pattern.svg");
+  background-repeat: no-repeat;
+  /* background-attachment: fixed; */
+  background-position: left top;
+  padding: 23px 25px 0px 0px;
+  margin: 10px 6px 0px 0px;
+}
 
 .btn {
   cursor: pointer;
@@ -152,13 +161,14 @@ img {
   background: linear-gradient(180deg, $primary-2 0%, $primary 100%);
   box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35);
   text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+  width:270px;
 }
 
 .btn-bg-light {
   background: linear-gradient(180deg, $light 0%, $light 100%);
   box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35);
   color:grey;
-  border-color: $light;
+  border-color: grey;
 }
 
 .modal,
