@@ -23,6 +23,7 @@ $modal-dialog-margin: 0;
 $modal-content-border-width: 0;
 $modal-content-border-radius: 0;
 
+$header-color:#514345;
 $primary: #B45054;
 $primary-2: #D27984;
 $headings-color: #19272e;
@@ -63,7 +64,7 @@ body {
 h1 {
   text-align: center;
   line-height: 140%;
-
+  color:$header-color;
   margin-top: 2rem;
   margin-bottom: 2rem;
 
@@ -75,7 +76,7 @@ h2 {
   margin-top: 2rem;
   margin-bottom: 1.5rem;
   line-height: 165%;
-
+  color:$header-color;
   &.subtitle {
     text-align: center;
 
@@ -150,13 +151,14 @@ img {
 .btn-bg-primary {
   background: linear-gradient(180deg, $primary-2 0%, $primary 100%);
   box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35);
-  
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
 }
 
 .btn-bg-light {
   background: linear-gradient(180deg, $light 0%, $light 100%);
   box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35);
-  color:grey
+  color:grey;
+  border-color: $light;
 }
 
 .modal,
