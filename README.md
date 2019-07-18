@@ -10,5 +10,7 @@ bundle exec middleman serve
 
 ## TODO
 
-- [] Fix the Horizontal Scroll
-- [] Implement the Register and Upload Endpoints
+- [x] Fix the Horizontal Scroll
+- [x] Implement the Register and Upload Endpoints
+- [x] Add the pattern
+- [ ] Add the flat nav at the top of page
