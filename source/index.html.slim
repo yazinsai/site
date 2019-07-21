@@ -298,7 +298,7 @@ title: BenefitJS, The fastest benefit integration
 
     
       .center
-        button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#"  
+        button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()" 
           | Get Started >
 
 javascript:
@@ -356,6 +356,24 @@ javascript:
       event.preventDefault();
       cgnData();
     });
+
+  function checkLogged() {    
+      var XHR = new XMLHttpRequest();
+      
+      XHR.addEventListener("load", function(event) {
+        alert(event.target.responseText);
+        
+      });
+      XHR.addEventListener("error", function(event) {
+        console.log("ERROR", event)
+        alert('Oops! Something went wrong.', event);
+      });
+      XHR.open("GET", "http://127.0.0.1:3666/users/logged");
+      XHR.withCredentials = true;
+      XHR.send();
+    }
+
+    
 
   function isMobile() {
     var check = false;
