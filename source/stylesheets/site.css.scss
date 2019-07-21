@@ -171,6 +171,21 @@ img {
   border-color: grey;
 }
 
+.navbar-nav { flex-direction:row !important; }
+.nav-item {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 32px;    
+  align-items: center;
+  }
+.left {
+  float:left;
+}
+.bar {
+  float: left;
+  padding: 5px;
+}
 .modal,
 .modal-dialog,
 .modal-content {
