@@ -13,4 +13,6 @@ bundle exec middleman serve
 - [x] Fix the Horizontal Scroll
 - [x] Implement the Register and Upload Endpoints
 - [x] Add the pattern
-- [ ] Add the flat nav at the top of page
+- [x] Add the flat nav at the top of page
+- [ ] Add Contact Us
+- [ ] Connect donate
