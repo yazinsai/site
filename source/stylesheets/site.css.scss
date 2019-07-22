@@ -14,7 +14,6 @@ $h1-font-size: 36px;
 $h2-font-size: 28px;
 $h3-font-size: 20px;
 
-
 $btn-border-radius-lg: 7px;
 $input-border-radius-lg: 999px;
 $border-radius: 5px;
@@ -23,16 +22,16 @@ $modal-dialog-margin: 0;
 $modal-content-border-width: 0;
 $modal-content-border-radius: 0;
 
-$header-color:#514345;
-$primary: #B45054;
-$primary-2: #D27984;
+$header-color: #514345;
+$primary: #b45054;
+$primary-2: #d27984;
 $headings-color: #19272e;
 $primary-3: #0d547d;
-$primary-5: #7E6D70;
-$primary-6: #E4DDDE;
+$primary-5: #7e6d70;
+$primary-6: #e4ddde;
 $primary-8: #ecf9fe;
-$light: #FBF9F9;
-$danger: #E7B1BA;
+$light: #fbf9f9;
+$danger: #e7b1ba;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 @import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
@@ -43,7 +42,7 @@ body {
 }
 .row-major {
   flex: 1;
-  padding-bottom: 47px;     
+  padding-bottom: 47px;
 }
 .above-the-fold {
   @include media-breakpoint-up(md) {
@@ -51,7 +50,6 @@ body {
     display: flex;
     flex-direction: column;
 
-    
     .row-minor {
       padding-bottom: 2rem;
 
@@ -65,7 +63,7 @@ body {
 h1 {
   text-align: center;
   line-height: 140%;
-  color:$header-color;
+  color: $header-color;
   margin-top: 2rem;
   margin-bottom: 2rem;
 
@@ -77,7 +75,7 @@ h2 {
   margin-top: 2rem;
   margin-bottom: 1.5rem;
   line-height: 165%;
-  color:$header-color;
+  color: $header-color;
   &.subtitle {
     text-align: center;
 
@@ -99,16 +97,14 @@ h3 {
 
     display: inline-block;
     width: 35px;
-    
+
     text-align: center;
     margin-right: 6px;
   }
 }
 
-
 .primary-color {
   color: $primary;
-   
 }
 
 p {
@@ -121,17 +117,17 @@ img {
   max-width: 100%;
 }
 .badge-color {
-  color:$light;
+  color: $light;
 }
 
 .fa-color {
   color: $primary-5;
 }
-.regular-font{
+.regular-font {
   font-weight: normal;
 }
-.pattern{
-  background:url("../images/pattern.svg");
+.pattern {
+  background: url("../images/pattern.svg");
   background-repeat: no-repeat;
   /* background-attachment: fixed; */
   background-position: left top;
@@ -151,9 +147,6 @@ img {
     font-weight: bold;
     font-size: 17px;
     line-height: 140%;
-
-
-    
   }
 }
 
@@ -161,31 +154,27 @@ img {
   background: linear-gradient(180deg, $primary-2 0%, $primary 100%);
   box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35);
   text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
-  width:270px;
+  width: 270px;
 }
 
 .btn-bg-light {
   background: linear-gradient(180deg, $light 0%, $light 100%);
   box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35);
-  color:grey;
+  color: grey;
   border-color: grey;
 }
 
-.navbar-nav { flex-direction:row !important; }
-.nav-item {
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 32px;    
-  align-items: center;
+.header-links {
+  text-align: center;
+
+  a {
+    & + a:before {
+      content: "|";
+      margin: 0 10px;
+    }
   }
-.left {
-  float:left;
 }
-.bar {
-  float: left;
-  padding: 5px;
-}
+
 .modal,
 .modal-dialog,
 .modal-content {
@@ -230,43 +219,41 @@ img {
     border: 0;
     cursor: pointer;
   }
-
 }
 
 .modal-bar {
   position: fixed;
-    top: 28px;
+  top: 28px;
 }
 
 .modal-head {
   padding: 10px 10px 0px 10px;
-  
 }
 
 .dot {
-  padding:0px
+  padding: 0px;
 }
 .primary-bg {
-  background-color: #FEF6F7;
+  background-color: #fef6f7;
 }
 
 .rectangle-number {
   position: absolute;
   z-index: 1;
   margin-top: -17px;
-  background-color: $primary !important
+  background-color: $primary !important;
 }
 
 .item {
   display: inline-block;
-  background:  #F9E6E9;
+  background: #f9e6e9;
   min-height: 250px;
   min-width: 400px;
   margin: 2em 1em;
   color: $primary;
   position: relative;
 
-  border: 1px solid #FEF6F7;
+  border: 1px solid #fef6f7;
   box-sizing: border-box;
   box-shadow: 0px 3px 1px rgba(129, 54, 62, 0.25);
   border-radius: 5px;
@@ -275,12 +262,11 @@ img {
     min-height: 200px;
     min-width: 200px;
   }
- 
 }
 
 .how-rectangle {
   position: relative;
-  background: #F9E6E9;
+  background: #f9e6e9;
   border-radius: 0.4em;
   padding: 2rem 1rem;
 
@@ -288,17 +274,10 @@ img {
   line-height: 165%;
 
   color: $primary;
- 
-
- 
-
-
-   
 }
 
 .how-to-wrapper > .row {
   overflow-x: auto;
-  
 }
 .how-to-wrapper > .row > .col-sm-6 {
   display: inline-block;
@@ -322,7 +301,7 @@ img {
 }
 
 .inline-buttons {
-  margin:10px;
+  margin: 10px;
 }
 .feature-row {
   margin-top: 3rem;
@@ -335,8 +314,6 @@ img {
   margin-bottom: 2rem;
   text-align: center;
 }
-
-
 
 .message-stack {
   position: absolute;
