@@ -6,58 +6,57 @@ title: BenefitJS, The fastest benefit integration
 #startModal.modal role="dialog" tabindex="-1" data-backdrop="static"
   .modal-dialog role="document" 
     .modal-content
-      .modal-body.center       
-        button.close-button data-dismiss="modal" 
-            img src="images/close.svg" /
-        .container.fluid-width
-          .row
-            .col
-              h3.primary-color.modal-head 
-                strong Register
-              img.dot src="images/ellipse_red.png" 
-            .col
-              h3.modal-head Upload CGN
-              img.dot src="images/ellipse_grey.png"  
-            .col
-              h3.modal-head Go Live
-              img.dot src="images/ellipse_grey.png"
-          
-        form id="register-form" 
-          p.h4.mb-4
-          input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
-          input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
-          small.form-text.text-muted.mb-4 Choose a secure password
-          button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
-
-          hr
-            p By clicking
-            em Sign up
-              | you agree to our terms of service
-              | Already member?
-        
-
-          
-
-#uploadModal.modal role="dialog" tabindex="-1" data-backdrop="static"
-  .modal-dialog role="document" 
-    .modal-content
-      .modal-body.center
-        
-        div
+      .modal-title.center
+        div       
           button.close-button data-dismiss="modal" 
-            img src="images/close.svg" /
-          .col-md
-            .row.center.modal-bar
-              col-sm-4
-                h3.modal-head Register
-                img.dot src="images/ellipse_grey.png" 
-              col-sm-4
-                h3.primary-color.modal-head 
-                  strong Upload CGN
-                img.dot src="images/ellipse_red.png"  
-              col-sm-4
-                h3.modal-head Go Live
-                img.dot src="images/ellipse_grey.png"
+              img src="images/close.svg" /
+        div style=("display:inline-block;")
+          .container.fluid-width
+            .row
+              div
+                a
+                  h3.header-selection.modal-head id="h-register"
+                    | Register
+                img.dot src="images/ellipse_red.png" id="img-register"
+              div
+                a
+                  h3.modal-head id="h-upload"
+                    | Upload CGN
+                img.dot src="images/ellipse_grey.png"  id="img-upload"
+              div
+                a id="a-live"
+                  h3.modal-head id="h-live"
+                    | Go Live
+                img.dot src="images/ellipse_grey.png" id="img-live"
+      .modal-body.center
+        div id="modal-body-register"  
+          form id="register-form" 
+            p.h4.mb-4
+            input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
+            input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
+            small.form-text.text-muted.mb-4 Choose a secure password
+            button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
+
+            hr              
+            a href="javascript:login();"
+              | Already a Member? Login
+        
+        div id="modal-body-login" style=("display:none;") 
+          form id="login-form" 
+            p.h4.mb-4
+            input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
+            input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
+            small.form-text.text-muted.mb-4 Choose a secure password
+            button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue 
+
+            hr
+            p New User?
+            a href="javascript:register();"
+              em Sign up
+      
+        
+        
+        div id="modal-body-upload" style=("display:none;")
           form id="cgn-form"           
             .input-group
               .input-group-prepend
@@ -68,32 +67,15 @@ title: BenefitJS, The fastest benefit integration
             
             button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
         
-#liveModal.modal role="dialog" tabindex="-1" data-backdrop="static"
-  .modal-dialog role="document" 
-    .modal-content
-      .modal-body.center
         
-        div
-          button.close-button data-dismiss="modal" 
-            img src="images/close.svg" /
-          .col-md
-            .row.center.modal-bar
-              col-sm-4
-                h3.modal-head Register
-                img.dot src="images/ellipse_grey.png" 
-              col-sm-4
-                h3.modal-head Upload CGN
-                img.dot src="images/ellipse_grey.png"  
-              col-sm-4
-                h3.primary-color.modal-head 
-                  strong Go Live
-                img.dot src="images/ellipse_red.png"
-          .row
-            .col
-              h3.primary-color Your public key:
-              p id="pk-field"
+        div id="modal-body-live" style=("display:none;")       
+          h3.primary-color Your public key(s):
+          p id="pk-field"
           
-                
+          p.code.primary-color id="pk-code"
+            
+          
+          
 
 /! Main content
 .container.above-the-fold
@@ -106,88 +88,84 @@ title: BenefitJS, The fastest benefit integration
 
 
   .row.row-major
-    .col-md.my-auto
+    div.my-auto
       h1
         | The easiest 
         | way to accept BENEFIT 
         
       p.center Accept online debit card payments in Bahrain effortlessly
-    .row.row-major
-      .col-md
-        .my-auto.order-md-1.center
-          img src="images/iphone-frame-2.png" /
-        .row          
-          .col-xs-6.mx-auto                            
-            button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#startModal" data-toggle="modal" style=("display: block; width:100%;") 
-              | Get Started
-          .col-xs-6.mx-auto                 
-            button.btn.btn-primary.btn-lg.btn-bg-light data-target="#uploadModal" data-toggle="modal" style=("display: block;") 
-              | Try it
+    
+    div.div-center      
+      img src="images/iphone-frame-2.png" /
+      .row          
+        .col-xs-6.mx-auto                            
+          button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged();" style=("display: block; width:100%;") 
+            | Get Started
+        .col-xs-6.mx-auto                 
+          button.btn.btn-primary.btn-lg.btn-bg-light data-target="#uploadModal" data-toggle="modal" style=("display: block;") 
+            | Try it
         
       
 
 .container
   .row.row-major id="features"
-    .col-md.center      
+    div.center      
       h2 Painless, one-step integration
-      .col-md.my-auto.order-md-1.center
+      div.center
         img src="images/carbon.png"
         
         button.btn.btn-primary.btn-lg.btn-bg-light data-target="#"  
           | Donate BD 0.100
 
-      .row
-        .col.center
+      div.center        
           p 
             | This is a 
             strong live demo 
             | of the BenefitJS library.
           
-          p All donations are made to Khairia.org
+          p All donations are made to Tarbeia.com
           
   .row.row-major.primary-bg
-    .col-md.my-auto.center       
+    .div-center       
       .display-1
         i.fa.fa-clock-o
       
-    .col-md.order-md-0
+    div
       .center
         h2 
           | Unbelievably 
           em fast...          
-      p
-        | Your customer can finish his transaction increadibly fast. 
-        | Forget about the slow redirects
-      p Imagine closing your sales in seconds.  
+      .pad
+        p
+          | Your customer can finish his transaction increadibly fast. 
+          | Forget about the slow redirects
+        p Imagine closing your sales in seconds.  
   
   .row
-    .col-md.my-auto.center.order-md-1
+    .div-center.order-md-1
       .display-1
         li.fa.fa-thumbs-up
-    .col-md.order-md-0
+    div.order-md-0
       .center
         h2 Beautifully crafted user experience
-                    
-      p
-        | Your customer will feel right at home with the checkout button. 
-        | BenefitJS seemlessly integrates with your website with a simple script
-      p Design your app or website however you like.  
+      .pad              
+        p
+          | Your customer will feel right at home with the checkout button. 
+          | BenefitJS seemlessly integrates with your website with a simple script
+        p Design your app or website however you like.  
       
-  .row
-    .col-md
-      .center
-        button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#" 
+  
+  div.center
+        button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()" 
           | Start Now >
   
   .row id="howto"
-    .col-md
-      .center
+    .div-center
         h2 How it works
 
   
   .how-to-wrapper
-    .row.text-center.flex-nowrap
-      
+    .row.text-center.flex-nowrap      
       .item
         h3.center
           .billiard-ball.rectangle-number 1
@@ -211,123 +189,161 @@ title: BenefitJS, The fastest benefit integration
           p this is an example of how it would look like   
 
   
-  .col-md
-    .center
-      button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#"  
+  div.center
+      button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()"  
         | Get Started >
           
   .row.row-major id="pricing"
-    .col
-      .center
-        h2 Pricing
+    div.div-center.center
+      h2 Pricing
 
-      .row
-        .col.center
-          p.primary-color.center.regular-font style="font-size:22px"
-            | The basic, 
-            strong 100% free 
-            | Plan
-      .row
-        .col
-          .center
-            h3
-              span.billiard-ball 
-                i.fa.fa-check.fa-color
-              | Accept unlimited payments
-            h3
-              span.billiard-ball 
-                i.fa.fa-check.fa-color
-              | Easy integration, zero setup    
+      div.center
+        p.primary-color.center.regular-font style="font-size:22px"
+          | The basic, 
+          strong 100% free 
+          | Plan
+      div
+        h3
+          span.billiard-ball 
+            i.fa.fa-check.fa-color
+          | Accept unlimited payments
+        h3
+          span.billiard-ball 
+            i.fa.fa-check.fa-color
+          | Easy integration, zero setup    
 
-      .row
-        .col.center
-          button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#"  
+      div.center
+          button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()"  
             | Start Free >
 
   .row.row-major.pattern
-    .col
-      .center
-        p.primary-color.center.regular-font style="font-size:22px"
-          | The 
-          strong Premium 
-          | Plan
+    div.div-center      
+      p.primary-color.center.regular-font style="font-size:22px"
+        | The 
+        strong Premium 
+        | Plan
 
-      .row
-        .col
-          p.center Everything in the Basic plan, plus:
-          h3 
-            span.billiard-ball 
-              i.fa.fa-check.fa-color 
-            | Recurring payments
-            .badge.badge-danger.primary-color NEW
-          h3
-            span.billiard-ball
-              i.fa.fa-check.fa-color
-            | Dashboard access
-          h3
-            span.billiard-ball 
-              i.fa.fa-check.fa-color
-            | Payment analytics 
-          h3
-            span.billiard-ball 
-              i.fa.fa-check.fa-color
-            | Priority Enterprise support 
+      div.div-center        
+        p.center Everything in the Basic plan, plus:
+        h3 
+          span.billiard-ball 
+            i.fa.fa-check.fa-color 
+          | Recurring payments
+          .badge.badge-danger.primary-color NEW
+        h3
+          span.billiard-ball
+            i.fa.fa-check.fa-color
+          | Dashboard access
+        h3
+          span.billiard-ball 
+            i.fa.fa-check.fa-color
+          | Payment analytics 
+        h3
+          span.billiard-ball 
+            i.fa.fa-check.fa-color
+          | Priority Enterprise support 
       
 
-      .row id="contact"
-        .col.center
-          button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#" 
-            | Contact Sales
+      div.center id="contact"       
+        button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#" 
+          | Contact Sales
 
   .row
-    .col
-      .center
-        h2.primary-color Ready to get started?
-
-    
-      .center
-        button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()" 
-          | Get Started >
+    div.div-center.center      
+      h2.fa-color Ready to get started?
+      button.btn.btn-primary.btn-lg.btn-bg-primary.center onclick="javascript:checkLogged()" 
+        | Get Started >
 
 javascript:
 
-  function registerData() {
+  console.log("Is modal open?",($("element").data('bs.modal') || {})._isShown);
+
+  function registerData() {    
     var XHR = new XMLHttpRequest();
     var FD = new FormData(registerForm);
     XHR.addEventListener("load", function(event) {
-      alert(event.target.responseText);
       var response=JSON.parse(event.target.responseText);      
       if (response.status == "success")
-      {        
-        $('#uploadModal').modal('show');
+      { 
+        $('#modal-body-register').hide(); 
+        $('#h-register').removeClass('header-selection');
+        $("#img-register").attr("src","images/ellipse_grey.png");
+
+        $('#modal-body-upload').show(); 
+        $('#h-upload').addClass('header-selection');
+        $("#img-upload").attr("src","images/ellipse_red.png");
       }
 
     });
     XHR.addEventListener("error", function(event) {
       alert('Oops! Something went wrong.');
     });
-    XHR.open("POST", "http://127.0.0.1:3666/users/register");
-    XHR.withCredentials = true;
+    XHR.open("POST", "http://127.0.0.1:3666/users/register");    
     XHR.send(FD);
   }
  
-  
   var registerForm = document.getElementById("register-form");
   registerForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    registerData();
+    event.preventDefault();    
+    registerData();    
+  });
+
+
+  function loginData() {    
+    var XHR = new XMLHttpRequest();
+    var FD = new FormData(loginForm);
+    XHR.addEventListener("load", function(event) {
+      var response=JSON.parse(event.target.responseText);      
+      if (response.status == "success")
+      { 
+        $('#modal-body-login').hide(); 
+        $('#h-register').removeClass('header-selection');
+        $("#img-register").attr("src","images/ellipse_grey.png");
+
+        $('#modal-body-upload').show(); 
+        $('#h-upload').addClass('header-selection');
+        $("#img-upload").attr("src","images/ellipse_red.png");
+
+        $("#a-live").attr("href","javascript:getKeys()");
+      }
+
+    });
+    XHR.addEventListener("error", function(event) {
+      alert('Oops! Something went wrong.');
+    });
+    XHR.open("POST", "http://127.0.0.1:3666/users/login");
+    XHR.withCredentials = true;
+    XHR.send(FD);
+  }
+  var loginForm = document.getElementById("login-form");
+  loginForm.addEventListener("submit", function (event) {
+    event.preventDefault();    
+    loginData();    
   });
    
   function cgnData() {    
       var XHR = new XMLHttpRequest();
       var FD = new FormData(cgnForm);
       XHR.addEventListener("load", function(event) {
-        alert(event.target.responseText);
         var response=JSON.parse(event.target.responseText);             
         if (response.status == "success")
-        {        
-          $('#liveModal').modal('show');
+        { 
+          $('#modal-body-upload').hide(); 
+          $('#h-upload').removeClass('header-selection');
+          $("#img-upload").attr("src","images/ellipse_grey.png");      
+          
+          $('#modal-body-live').show();
+          $('#h-live').addClass('header-selection');
+          $("#img-live").attr("src","images/ellipse_red.png");
+
           $("p#pk-field").text(response.data);
+          var snip =  "<form>\n"
+              +"<script src=\".\/index.js\" data-key="+response.data+" data-amount=1.234 data-transaction-id=\"123\">\n"
+              +"<\/script>\n"
+             +"<\/form>\n";
+           $("p#pk-code").text(snip );
+              
+          $('#startModal').modal('show');
         }
       });
       XHR.addEventListener("error", function(event) {
@@ -337,29 +353,103 @@ javascript:
       XHR.open("POST", "http://127.0.0.1:3666/users/upload/cgn");
       XHR.withCredentials = true;
       XHR.send(FD);
-    }
-    
-    var cgnForm = document.getElementById("cgn-form");
-    cgnForm.addEventListener("submit", function (event) {    
-      event.preventDefault();
-      cgnData();
-    });
+  }  
+  var cgnForm = document.getElementById("cgn-form");
+  cgnForm.addEventListener("submit", function (event) {    
+    event.preventDefault();
+    cgnData();
+  });
 
+ 
+  
   function checkLogged() {    
-      var XHR = new XMLHttpRequest();
+    var XHR = new XMLHttpRequest();      
+    XHR.addEventListener("load", function(event) {     
+       
+      var response=JSON.parse(event.target.responseText);       
+      if (response.status == "success")
+      { 
+        $('#modal-body-register').hide();
+        $('#modal-body-live').hide();
+        $('#h-register').removeClass('header-selection');
+        $('#h-live').removeClass('header-selection');
+        $("#img-register").attr("src","images/ellipse_grey.png");
+        $("#img-live").attr("src","images/ellipse_grey.png");
+
+        $('#modal-body-upload').show();
+        $('#h-upload').addClass('header-selection');
+        $("#img-upload").attr("src","images/ellipse_red.png");
+
+        $("#a-live").attr("href","javascript:getKeys()");        
+
+        $('#startModal').modal('show');
+      }
+      else{
+        $('#startModal').modal('show');
+      }            
       
-      XHR.addEventListener("load", function(event) {
-        alert(event.target.responseText);
-        
-      });
-      XHR.addEventListener("error", function(event) {
-        console.log("ERROR", event)
-        alert('Oops! Something went wrong.', event);
-      });
-      XHR.open("GET", "http://127.0.0.1:3666/users/logged");
-      XHR.withCredentials = true;
-      XHR.send();
-    }
+    });
+    XHR.addEventListener("error", function(event) {
+      console.log("ERROR", event)
+      alert('Oops! Something went wrong.', event);
+      $('#startModal').modal('show');      
+    });
+    XHR.open("GET", "http://127.0.0.1:3666/users/logged");
+    XHR.withCredentials = true;
+    XHR.send();
+  }    
+
+  
+  function getKeys() {    
+    var XHR = new XMLHttpRequest();      
+    XHR.addEventListener("load", function(event) {
+      var response=JSON.parse(event.target.responseText);           
+      if (response.status == "success")
+      { 
+        $('#modal-body-upload').hide();
+        $('#h-upload').removeClass('header-selection');
+        $("#img-upload").attr("src","images/ellipse_grey.png");
+
+        $('#modal-body-live').show();
+        $('#h-live').addClass('header-selection');
+        $("#img-live").attr("src","images/ellipse_red.png");
+        console.log("here are the keys")
+        for (i = 0; i < response.data.length; i++) {
+          console.log(response.data[i])
+            $("p#pk-field").append('<p>'+ response.data[i].alias +'<\p>' +            
+                                  '<p>'+ response.data[i].public_key +'<\p><hr>');              
+            
+        }       
+        $('#startModal').modal('show');
+      }
+      else{
+        alert(response.message)
+        $('#startModal').modal('show');
+      }       
+    });
+    XHR.addEventListener("error", function(event) {
+      console.log("ERROR", event)
+      alert('Oops! Something went wrong.', event);
+      $('#startModal').modal('show');
+      
+    });
+    XHR.open("GET", "http://127.0.0.1:3666/users/keys");
+    XHR.withCredentials = true;
+    XHR.send();
+  }
+
+  
+  function login() {
+    $('#modal-body-register').hide();          
+    $('#h-register').text("Login");          
+    $('#modal-body-login').show();
+  }
+
+  function register() {
+    $('#modal-body-register').show();          
+    $('#h-register').text("Register");          
+    $('#modal-body-login').hide();
+  }
 
     
 
