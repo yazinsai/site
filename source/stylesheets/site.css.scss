@@ -143,6 +143,10 @@ img {
   /*padding: 23px 25px 0px 0px;
   margin: 10px 6px 0px 0px;*/
 }
+#error-msg{
+  color:$danger;
+}
+
 
 .btn {
   cursor: pointer;
@@ -196,9 +200,10 @@ img {
   }
 
   .modal-body {
-    display: flex;
+    display: block;
     flex-direction: column;
     justify-content: space-around;
+    padding: 4rem 1rem;
   }
 
   input.form-control {
@@ -362,4 +367,23 @@ img {
 
 .center {
   text-align: center;
+}
+
+.donate-button {
+  position: relative;
+  margin: 1.5rem auto;
+  padding: 15px 35px 15px 35px;
+  font-weight: bold;
+  font-size: 17px;
+  line-height: 140%;
+}
+
+#donate-form {
+  button {
+    background: linear-gradient(180deg, $light 0%, $light 100%) !important;
+    box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35) !important;
+    color: grey;
+    border-color: #C4BBBC !important;    
+  }
+  
 }
