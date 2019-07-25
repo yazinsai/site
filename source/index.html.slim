@@ -2,6 +2,17 @@
 title: BenefitJS, The fastest benefit integration
 ---
 
+javascript:
+  function setStep(stepNum) {
+    const steps = document.querySelectorAll(".step")
+
+    for (i = 0; i < steps.length; i++) {
+      i == stepNum ?
+        steps[i].classList.add('active') :
+        steps[i].classList.remove('active')
+    }
+  }
+
 /! Modal
 #startModal.modal role="dialog" tabindex="-1" data-backdrop="static"
   .modal-dialog role="document" 
