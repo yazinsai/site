@@ -6,31 +6,21 @@ title: BenefitJS, The fastest benefit integration
 #startModal.modal role="dialog" tabindex="-1" data-backdrop="static"
   .modal-dialog role="document" 
     .modal-content
-      .modal-title.center
+      .modal-title
         div       
           button.close-button data-dismiss="modal" 
               img src="images/close.svg" /
-        div style=("display:inline-block;")
-          .container.fluid-width
-            .row
-              div
-                a
-                  h3.header-selection.modal-head id="h-register"
-                    | Register
-                img.dot src="images/ellipse_red.png" id="img-register"
-              div
-                a
-                  h3.modal-head id="h-upload"
-                    | Upload CGN
-                img.dot src="images/ellipse_grey.png"  id="img-upload"
-              div
-                a id="a-live"
-                  h3.modal-head id="h-live"
-                    | Go Live
-                img.dot src="images/ellipse_grey.png" id="img-live"
-      .modal-body.center style=("display:block;")
-        div id="error-msg"
-        div id="modal-body-register"  
+        .container.fluid-width.step-header
+          .row
+            .col
+              a#h-register.step.active Register
+            .col
+              a#h-upload.step Upload CGN
+            .col
+              a#h-live.step Go Live
+      .modal-body.center
+        #error-msg
+        #modal-body-register
           form id="register-form" 
             p.h4.mb-4
             input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
@@ -42,7 +32,7 @@ title: BenefitJS, The fastest benefit integration
             a href="javascript:login();"
               | Already a Member? Login
         
-        div id="modal-body-login" style=("display:none;") 
+        #modal-body-login style=("display:none;") 
           form id="login-form" 
             p.h4.mb-4
             input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
@@ -57,8 +47,8 @@ title: BenefitJS, The fastest benefit integration
       
         
         
-        div id="modal-body-upload" style=("display:none;")
-          form id="cgn-form"           
+        #modal-body-upload style=("display:none;")
+          form#cgn-form
             .input-group
               .input-group-prepend
                 span.input-group-text id="inputGroupFileAddon01" Upload               
@@ -68,7 +58,7 @@ title: BenefitJS, The fastest benefit integration
             button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
         
         
-        div id="modal-body-live" style=("display:none;")       
+        #modal-body-live style=("display:none;")       
           h3.primary-color Your public key(s):
           p id="pk-field"
           
@@ -88,14 +78,14 @@ title: BenefitJS, The fastest benefit integration
 
 
   .row.row-major
-    div.my-auto
+    .my-auto
       h1
         | The easiest 
         | way to accept BENEFIT 
         
       p.center Accept online debit card payments in Bahrain effortlessly
     
-    div.div-center      
+    .div-center      
       img src="images/iphone-frame-2.png" /
       .row          
         .col-xs-6.mx-auto                            
@@ -256,39 +246,52 @@ title: BenefitJS, The fastest benefit integration
         | Get Started >
 
 javascript:
+  const BASE_URL = "#{ENV['API_URL']}"
 
   console.log("Is modal open?",($("element").data('bs.modal') || {})._isShown);
+
+  function callApi(endpoint, options) {
+    const DEFAULT_OPTIONS = {
+      method: "GET",
+      withCredentials: true
+    }
+
+    return new Promise((resolve, reject) => {
+      fetch(`${BASE_URL}${endpoint}`, Object.assign(DEFAULT_OPTIONS, options))
+        .then(response => resolve(response.json()))
+        .catch(error => reject(error.json()))
+    })
+  }
+
+  function formToUrlParams(whichForm) {
+    console.info(whichForm)
+    const data = new URLSearchParams();
+    for (const pair of new FormData(whichForm)) {
+      data.append(pair[0], pair[1]);
+    }
+    console.info(data)
+    return data
+  }
   
   function registerData() {
-    $('#error-msg').text("");    
-    var XHR = new XMLHttpRequest();
-    var FD = new FormData(registerForm);
-    XHR.addEventListener("load", function(event) {
-      var response=JSON.parse(event.target.responseText);      
-      if (response.status == "success")
-      { 
-        $('#modal-body-register').hide(); 
-        $('#h-register').removeClass('header-selection');
-        $("#img-register").attr("src","images/ellipse_grey.png");
+    callApi("users/register", {
+      method: "POST",
+      body: formToUrlParams(registerForm)
+    }).then(response => {
+      console.info(response)
+      // Success
+      $('#modal-body-register').hide(); 
+      $('#h-register').removeClass('active');
+      $("#img-register").attr("src","images/ellipse_grey.png");
 
-        $('#modal-body-upload').show(); 
-        $('#h-upload').addClass('header-selection');
-        $("#img-upload").attr("src","images/ellipse_red.png");
-      }
-      else{
-        $('#error-msg').text(response.message)
-      }
-    });
-    XHR.addEventListener("error", function(event) {
-      if (XHR.readyState == 4){
-        $('#error-msg').text("Network Error");
-        }
-        else {
-          $('#error-msg').text("Network Error");
-        }
-    });
-    XHR.open("POST", "http://127.0.0.1:3666/users/register");    
-    XHR.send(FD);
+      $('#modal-body-upload').show(); 
+      $('#h-upload').addClass('active');
+      $("#img-upload").attr("src","images/ellipse_red.png");
+    }).catch(error => {
+      // Failure
+      console.error(error)
+      $('#error-msg').text(error.message)
+    })
   }
  
   var registerForm = document.getElementById("register-form");
@@ -307,11 +310,11 @@ javascript:
       if (response.status == "success")
       { 
         $('#modal-body-login').hide(); 
-        $('#h-register').removeClass('header-selection');
+        $('#h-register').removeClass('active');
         $("#img-register").attr("src","images/ellipse_grey.png");
 
         $('#modal-body-upload').show(); 
-        $('#h-upload').addClass('header-selection');
+        $('#h-upload').addClass('active');
         $("#img-upload").attr("src","images/ellipse_red.png");
 
         $("#a-live").attr("href","javascript:getKeys()");
@@ -348,11 +351,11 @@ javascript:
         if (response.status == "success")
         { 
           $('#modal-body-upload').hide(); 
-          $('#h-upload').removeClass('header-selection');
+          $('#h-upload').removeClass('active');
           $("#img-upload").attr("src","images/ellipse_grey.png");      
           
           $('#modal-body-live').show();
-          $('#h-live').addClass('header-selection');
+          $('#h-live').addClass('active');
           $("#img-live").attr("src","images/ellipse_red.png");
 
           $("p#pk-field").text(response.data);
@@ -399,13 +402,13 @@ javascript:
       { 
         $('#modal-body-register').hide();
         $('#modal-body-live').hide();
-        $('#h-register').removeClass('header-selection');
-        $('#h-live').removeClass('header-selection');
+        $('#h-register').removeClass('active');
+        $('#h-live').removeClass('active');
         $("#img-register").attr("src","images/ellipse_grey.png");
         $("#img-live").attr("src","images/ellipse_grey.png");
 
         $('#modal-body-upload').show();
-        $('#h-upload').addClass('header-selection');
+        $('#h-upload').addClass('active');
         $("#img-upload").attr("src","images/ellipse_red.png");
 
         $("#a-live").attr("href","javascript:getKeys()");        
@@ -443,11 +446,11 @@ javascript:
       if (response.status == "success")
       { 
         $('#modal-body-upload').hide();
-        $('#h-upload').removeClass('header-selection');
+        $('#h-upload').removeClass('active');
         $("#img-upload").attr("src","images/ellipse_grey.png");
 
         $('#modal-body-live').show();
-        $('#h-live').addClass('header-selection');
+        $('#h-live').addClass('active');
         $("#img-live").attr("src","images/ellipse_red.png");
         console.log("here are the keys")
         for (i = 0; i < response.data.length; i++) {

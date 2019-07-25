@@ -105,20 +105,38 @@ h3 {
   }
 }
 .pad {
-  padding:15px;
+  padding: 15px;
 }
 .primary-color {
   color: $primary;
 }
-.header-selection {
-  color: $primary;
-  font-weight: bold;
+
+.step-header {
+  a.step {
+    background-image: url("../images/ellipse_grey.png");
+    background-position: bottom center;
+    background-repeat: no-repeat;
+
+    display: block;
+    text-align: center;
+    padding-bottom: 20px;
+
+    margin-top: 1.5rem;
+    font-weight: normal;
+    color: #a79a9c;
+    line-height: 165%;
+
+    &.active {
+      background-image: url("../images/ellipse_red.png");
+      color: $primary;
+      font-weight: bold;
+    }
+  }
 }
 
 p {
   font-size: 18px;
   line-height: 165%;
-  
 }
 
 img {
@@ -143,10 +161,9 @@ img {
   /*padding: 23px 25px 0px 0px;
   margin: 10px 6px 0px 0px;*/
 }
-#error-msg{
-  color:$danger;
+#error-msg {
+  color: $danger;
 }
-
 
 .btn {
   cursor: pointer;
@@ -154,7 +171,7 @@ img {
   &.btn-lg {
     position: relative;
     margin: 1.5rem auto;
-    padding: 15px 35px 15px 35px;    
+    padding: 15px 35px 15px 35px;
     font-weight: bold;
     font-size: 17px;
     line-height: 140%;
@@ -172,7 +189,7 @@ img {
   background: linear-gradient(180deg, $light 0%, $light 100%);
   box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35);
   color: grey;
-  border-color: #C4BBBC;
+  border-color: #c4bbbc;
 }
 
 .header-links {
@@ -200,9 +217,6 @@ img {
   }
 
   .modal-body {
-    display: block;
-    flex-direction: column;
-    justify-content: space-around;
     padding: 4rem 1rem;
   }
 
@@ -224,13 +238,14 @@ img {
   }
 
   .close-button {
-    position: absolute;    
-    right: 10px;
+    position: absolute;
+    top: -2px;
+    right: -9px;
     background: transparent;
     border: 0;
     cursor: pointer;
     img {
-      padding:5px;
+      padding: 5px;
     }
   }
 }
@@ -238,10 +253,6 @@ img {
 .modal-bar {
   position: fixed;
   top: 28px;
-}
-
-.modal-head {
-  padding: 10px 10px 0px 10px;
 }
 
 .dot {
@@ -383,7 +394,6 @@ img {
     background: linear-gradient(180deg, $light 0%, $light 100%) !important;
     box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35) !important;
     color: grey;
-    border-color: #C4BBBC !important;    
+    border-color: #c4bbbc !important;
   }
-  
 }
