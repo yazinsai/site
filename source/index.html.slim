@@ -4,13 +4,27 @@ title: BenefitJS, The fastest benefit integration
 
 javascript:
   function setStep(stepNum) {
+    stepNum-=1;
     const steps = document.querySelectorAll(".step")
-
+    const pages = document.querySelectorAll(".page")    
+   
+    
     for (i = 0; i < steps.length; i++) {
       i == stepNum ?
-        steps[i].classList.add('active') :
-        steps[i].classList.remove('active')
+        (steps[i].classList.add('active'),pages[i].classList.add('active')) :        
+        (steps[i].classList.remove('active'), pages[i].classList.remove('active'))
     }
+
+  //login
+    stepNum == -1 ? 
+    (
+      steps[0].classList.add('active'),
+      steps[0].innerHTML='Login',
+      document.getElementById("modal-body-login").classList.add("active")):
+      (document.getElementById("modal-body-login").classList.remove("active"),
+      steps[0].innerHTML='Register')       
+        
+    $('#startModal').modal('show');
   }
 
 /! Modal
@@ -21,7 +35,8 @@ javascript:
         div       
           button.close-button data-dismiss="modal" 
               img src="images/close.svg" /
-        .container.fluid-width.step-header
+        /! the display inline to avoid step-header blocking the close button
+        .container.fluid-width.step-header style=('display:inline;') 
           .row
             .col
               a#h-register.step.active Register
@@ -31,8 +46,8 @@ javascript:
               a#h-live.step Go Live
       .modal-body.center
         #error-msg
-        #modal-body-register
-          form id="register-form" 
+        .page#modal-body-register
+          form#register-form
             p.h4.mb-4
             input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
             input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
@@ -43,12 +58,12 @@ javascript:
             a href="javascript:login();"
               | Already a Member? Login
         
-        #modal-body-login style=("display:none;") 
-          form id="login-form" 
+        .page-login#modal-body-login 
+          form#login-form
             p.h4.mb-4
             input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
             input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
-            small.form-text.text-muted.mb-4 Choose a secure password
+            
             button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue 
 
             hr
@@ -58,7 +73,7 @@ javascript:
       
         
         
-        #modal-body-upload style=("display:none;")
+        .page#modal-body-upload 
           form#cgn-form
             .input-group
               .input-group-prepend
@@ -69,12 +84,30 @@ javascript:
             button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
         
         
-        #modal-body-live style=("display:none;")       
+        .page#modal-body-live        
           h3.primary-color Your public key(s):
           p id="pk-field"
           
           p.code.primary-color id="pk-code"
+          pre.code
             
+            |  &lt;form action=&quot;/pay&quot; method=&quot;POST&quot;&gt;
+            br
+            |    &lt;script src=&quot;https://fast.benefitjs.com/benefit.js&quot;
+            br
+            |      data-key=&quot;
+            key.key#pk-pk key_...
+            |&quot;
+            br
+            |      data-transaction-id=&quot;1234&quot;
+            br  
+            |      data-amount=&quot;1&quot;&gt;
+            br
+            |    &lt;/script&gt;
+            br
+            |    &lt;!-- renders &apos;pay&apos; button, submits form when done --&gt;
+            br
+            |  &lt;/form&gt;
           
           
 
@@ -115,7 +148,7 @@ javascript:
       div.center
         img src="images/carbon.png"
         
-        form.donate-button action="/pay" method="POST" id="donate-form"
+        form.donate-button#donate-form action="/pay" method="POST" 
           script src="https://fast.benefitjs.com/benefit.js" data-title="Donate to Tarbeia.org" data-button-text="Donate BD 0.1" data-key="donation-to-tarbeia-org" data-transaction-id="19201" data-amount="0.1"
         
         
@@ -195,7 +228,7 @@ javascript:
       button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()"  
         | Get Started >
           
-  .row.row-major id="pricing"
+  .row.row-major#pricing
     div.div-center.center
       h2 Pricing
 
@@ -246,7 +279,7 @@ javascript:
           | Priority Enterprise support 
       
 
-      div.center id="contact"       
+      div.center#contact       
         button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:window.open('mailto:sales@benefitjs.com');" 
           | Contact Sales
 
@@ -259,14 +292,12 @@ javascript:
 javascript:
   const BASE_URL = "#{ENV['API_URL']}"
 
-  console.log("Is modal open?",($("element").data('bs.modal') || {})._isShown);
-
   function callApi(endpoint, options) {
     const DEFAULT_OPTIONS = {
       method: "GET",
-      withCredentials: true
+      credentials:"include"
     }
-
+    
     return new Promise((resolve, reject) => {
       fetch(`${BASE_URL}${endpoint}`, Object.assign(DEFAULT_OPTIONS, options))
         .then(response => resolve(response.json()))
@@ -274,33 +305,25 @@ javascript:
     })
   }
 
-  function formToUrlParams(whichForm) {
-    console.info(whichForm)
-    const data = new URLSearchParams();
-    for (const pair of new FormData(whichForm)) {
-      data.append(pair[0], pair[1]);
-    }
-    console.info(data)
-    return data
-  }
   
   function registerData() {
+    $('#error-msg').text(""); 
+
     callApi("users/register", {
       method: "POST",
-      body: formToUrlParams(registerForm)
-    }).then(response => {
-      console.info(response)
-      // Success
-      $('#modal-body-register').hide(); 
-      $('#h-register').removeClass('active');
-      $("#img-register").attr("src","images/ellipse_grey.png");
+      body: new FormData(registerForm)
+    }).then(result => {
+      
+      result.object == "error" ? 
+      (setStep(1), $('#error-msg').text(result.message) ) : 
+      (          
+       $("#h-live").attr("href","javascript:getKeys()"),        
+       setStep(2)  
+      )
 
-      $('#modal-body-upload').show(); 
-      $('#h-upload').addClass('active');
-      $("#img-upload").attr("src","images/ellipse_red.png");
+      
     }).catch(error => {
-      // Failure
-      console.error(error)
+      
       $('#error-msg').text(error.message)
     })
   }
@@ -313,39 +336,25 @@ javascript:
 
 
   function loginData() {
-    $('#error-msg').text("");    
-    var XHR = new XMLHttpRequest();
-    var FD = new FormData(loginForm);
-    XHR.addEventListener("load", function(event) {
-      var response=JSON.parse(event.target.responseText);      
-      if (response.status == "success")
-      { 
-        $('#modal-body-login').hide(); 
-        $('#h-register').removeClass('active');
-        $("#img-register").attr("src","images/ellipse_grey.png");
+    $('#error-msg').text("");     
+    callApi("users/login", {
+      method: "POST",
+      body: new FormData(loginForm)
+    }).then(result => {
+      
+      result.object == "error" ? 
+      (setStep(1), $('#error-msg').text(result.message) ) : 
+      (        
+       $("#h-live").attr("href","javascript:getKeys()"),        
+       setStep(2)  
+      )
+      
+    }).catch(error => {
+      
+      console.error(error)
+      $('#error-msg').text(error.message)
+    })
 
-        $('#modal-body-upload').show(); 
-        $('#h-upload').addClass('active');
-        $("#img-upload").attr("src","images/ellipse_red.png");
-
-        $("#a-live").attr("href","javascript:getKeys()");
-      }
-      else{
-        $('#error-msg').text(response.message)
-      }
-
-    });
-    XHR.addEventListener("error", function(event) {
-      if (XHR.readyState == 4){
-        $('#error-msg').text("Network Error");
-        }
-        else {
-          $('#error-msg').text("Network Error");
-        }
-    });
-    XHR.open("POST", "http://127.0.0.1:3666/users/login");
-    XHR.withCredentials = true;
-    XHR.send(FD);
   }
   var loginForm = document.getElementById("login-form");
   loginForm.addEventListener("submit", function (event) {
@@ -354,46 +363,28 @@ javascript:
   });
    
   function cgnData() {
-      $('#error-msg').text("");    
-      var XHR = new XMLHttpRequest();
-      var FD = new FormData(cgnForm);
-      XHR.addEventListener("load", function(event) {
-        var response=JSON.parse(event.target.responseText);             
-        if (response.status == "success")
-        { 
-          $('#modal-body-upload').hide(); 
-          $('#h-upload').removeClass('active');
-          $("#img-upload").attr("src","images/ellipse_grey.png");      
-          
-          $('#modal-body-live').show();
-          $('#h-live').addClass('active');
-          $("#img-live").attr("src","images/ellipse_red.png");
+      $('#error-msg').text("");     
+      callApi("users/upload/cgn", {
+        method: "POST",
+        body: new FormData(cgnForm),
+       
+      }).then(result => {
+        
+        result.object == "error" ? 
+        (setStep(2), $('#error-msg').text(result.message)) : 
+        (     
+          $("p#pk-field").text(result.data),
+         
+            $("key#pk-pk").text(result.data),        
+        setStep(3)  
+        )
 
-          $("p#pk-field").text(response.data);
-          var snip =  "<form>\n"
-              +"<script src=\".\/index.js\" data-key="+response.data+" data-amount=1.234 data-transaction-id=\"123\">\n"
-              +"<\/script>\n"
-             +"<\/form>\n";
-           $("p#pk-code").text(snip );
-              
-          $('#startModal').modal('show');
-        }
-        else{
-          $('#error-msg').text(response.message)
-        }
-      });
-      XHR.addEventListener("error", function(event) {
-        console.log("ERROR", event)
-        if (XHR.readyState == 4){
-        $('#error-msg').text("Network Error");
-        }
-        else {
-          $('#error-msg').text("Network Error");
-        }
-      });
-      XHR.open("POST", "http://127.0.0.1:3666/users/upload/cgn");
-      XHR.withCredentials = true;
-      XHR.send(FD);
+        
+      }).catch(error => {
+        // Failure
+        console.error(error)
+        $('#error-msg').text(error.message)
+      })
   }  
   var cgnForm = document.getElementById("cgn-form");
   cgnForm.addEventListener("submit", function (event) {    
@@ -404,110 +395,60 @@ javascript:
  
   
   function checkLogged() {
-    $('#error-msg').text("");    
-    var XHR = new XMLHttpRequest();      
-    XHR.addEventListener("load", function(event) {     
-       
-      var response=JSON.parse(event.target.responseText);       
-      if (response.status == "success")
-      { 
-        $('#modal-body-register').hide();
-        $('#modal-body-live').hide();
-        $('#h-register').removeClass('active');
-        $('#h-live').removeClass('active');
-        $("#img-register").attr("src","images/ellipse_grey.png");
-        $("#img-live").attr("src","images/ellipse_grey.png");
+    $('#error-msg').text("");
 
-        $('#modal-body-upload').show();
-        $('#h-upload').addClass('active');
-        $("#img-upload").attr("src","images/ellipse_red.png");
+    callApi("users/logged").then(result => {      
+      result.object == "error" ? setStep(1) : (     
+       $("#h-live").attr("href","javascript:getKeys()"),        
+       setStep(2)  
+      )
 
-        $("#a-live").attr("href","javascript:getKeys()");        
-
-        $('#startModal').modal('show');
-      }
-      else{
-        //$('#error-msg').text(response.message)
-        $('#startModal').modal('show');
-      }            
-      
-    });
-    XHR.addEventListener("error", function(event) {
-      console.log("ERROR", event)
-      
-      if (XHR.readyState == 4){
-        alert('Oops! Network Error');      
-      }
-      else {
-        alert('Oops! Something went wrong.');
-      }
-           
-    });
-    XHR.open("GET", "http://127.0.0.1:3666/users/logged");
-    XHR.withCredentials = true;
-    XHR.send();
+    }).catch(error => {
+        console.error(error)
+        $('#error-msg').text(error.message)
+    })    
+  
   }    
 
   
   function getKeys() {
-    $('#error-msg').text("");    
-    var XHR = new XMLHttpRequest();      
-    XHR.addEventListener("load", function(event) {
-      var response=JSON.parse(event.target.responseText);           
-      if (response.status == "success")
-      { 
-        $('#modal-body-upload').hide();
-        $('#h-upload').removeClass('active');
-        $("#img-upload").attr("src","images/ellipse_grey.png");
+    $('#error-msg').text("");  
+    
+    callApi("users/keys", {
+      method: "GET",      
+    }).then(result => {       
 
-        $('#modal-body-live').show();
-        $('#h-live').addClass('active');
-        $("#img-live").attr("src","images/ellipse_red.png");
-        console.log("here are the keys")
-        for (i = 0; i < response.data.length; i++) {
-          console.log(response.data[i])
-            $("p#pk-field").append('<p>'+ response.data[i].alias +'<\p>' +            
-                                  '<p>'+ response.data[i].public_key +'<\p><hr>');              
-            
-        }       
-        $('#startModal').modal('show');
-      }
-      else{
-        $('#error-msg').text(response.message)
-        alert(response.message)
-        $('#startModal').modal('show');
-      }       
-    });
-    XHR.addEventListener("error", function(event) {
-      console.log("ERROR", event)
-      
-       if (XHR.readyState == 4){
-        $('#error-msg').text("Network Error");
+        if (result.object == "error") { 
+          $('#error-msg').text(result.message);
         }
-        else {
-          $('#error-msg').text("Network Error");
+        else{  
+          $("p#pk-field").text("");
+          for (i = 0; i < result.data.length; i++) {            
+              $("p#pk-field").append('<p>'+ result.data[i].alias +'<\p>' +            
+                                    '<p>'+ result.data[i].public_key +'<\p><hr>');              
+              
+          }     
+           $("key#pk-pk").text(result.data[result.data.length-1].public_key);
+          setStep(3);  
         }
-      $('#startModal').modal('show');
-      
-    });
-    XHR.open("GET", "http://127.0.0.1:3666/users/keys");
-    XHR.withCredentials = true;
-    XHR.send();
+
+    }).catch(error => {
+        console.error(error)
+        $('#error-msg').text(error.message)
+        alert(error.message)
+        $('#startModal').modal('show');
+    })    
+
+   
   }
 
   
   function login() {
-    $('#error-msg').text("");
-    $('#modal-body-register').hide();          
-    $('#h-register').text("Login");          
-    $('#modal-body-login').show();
+    setStep(0);
   }
 
   function register() {
-    $('#error-msg').text("");
-    $('#modal-body-register').show();          
-    $('#h-register').text("Register");          
-    $('#modal-body-login').hide();
+    setStep(1);
   }
  
   function isMobile() {
