@@ -4,27 +4,31 @@ title: BenefitJS, The fastest benefit integration
 
 javascript:
   function setStep(stepNum) {
-    stepNum-=1;
+    
     const steps = document.querySelectorAll(".step")
     const pages = document.querySelectorAll(".page")    
    
     
-    for (i = 0; i < steps.length; i++) {
+    for (i = 1; i <= steps.length; i++) {
       i == stepNum ?
-        (steps[i].classList.add('active'),pages[i].classList.add('active')) :        
-        (steps[i].classList.remove('active'), pages[i].classList.remove('active'))
+        (steps[i-1].classList.add('active'),pages[i-1].classList.add('active')) :        
+        (steps[i-1].classList.remove('active'), pages[i-1].classList.remove('active'))
     }
 
   //login
-    stepNum == -1 ? 
-    (
-      steps[0].classList.add('active'),
-      steps[0].innerHTML='Login',
-      document.getElementById("modal-body-login").classList.add("active")):
-      (document.getElementById("modal-body-login").classList.remove("active"),
-      steps[0].innerHTML='Register')       
+    if(stepNum == 1.1 ) 
+    {
+      steps[0].classList.add('active');
+      steps[0].innerHTML='Login';
+      document.getElementById("modal-body-login").classList.add("active")
+      }
+      else{
+      document.getElementById("modal-body-login").classList.remove("active");
+      steps[0].innerHTML='Register';
+      }       
         
     $('#startModal').modal('show');
+    
   }
 
 /! Modal
@@ -279,8 +283,9 @@ javascript:
           | Priority Enterprise support 
       
 
-      div.center#contact       
-        button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:window.open('mailto:sales@benefitjs.com');" 
+      div.center#contact
+            
+        a.btn.btn-primary.btn-lg.btn-bg-primary href="mailto:sales@benefitjs.com" 
           | Contact Sales
 
   .row
@@ -305,6 +310,15 @@ javascript:
     })
   }
 
+  function isError(result, stepNumber){
+    if (result.object == "error"){
+      setStep(stepNumber);
+      $('#error-msg').text(result.message) 
+      return true;
+    }
+    return false;
+  }
+
   
   function registerData() {
     $('#error-msg').text(""); 
@@ -313,13 +327,10 @@ javascript:
       method: "POST",
       body: new FormData(registerForm)
     }).then(result => {
-      
-      result.object == "error" ? 
-      (setStep(1), $('#error-msg').text(result.message) ) : 
-      (          
-       $("#h-live").attr("href","javascript:getKeys()"),        
+      if (isError(result,1) == false) {
+          $("#h-live").attr("href","javascript:getKeys()"),        
        setStep(2)  
-      )
+      }    
 
       
     }).catch(error => {
@@ -341,13 +352,11 @@ javascript:
       method: "POST",
       body: new FormData(loginForm)
     }).then(result => {
-      
-      result.object == "error" ? 
-      (setStep(1), $('#error-msg').text(result.message) ) : 
-      (        
+      if (isError(result,1.1) == false){
+          
        $("#h-live").attr("href","javascript:getKeys()"),        
        setStep(2)  
-      )
+     }
       
     }).catch(error => {
       
@@ -369,16 +378,12 @@ javascript:
         body: new FormData(cgnForm),
        
       }).then(result => {
-        
-        result.object == "error" ? 
-        (setStep(2), $('#error-msg').text(result.message)) : 
-        (     
-          $("p#pk-field").text(result.data),
-         
-            $("key#pk-pk").text(result.data),        
-        setStep(3)  
-        )
-
+        if (isError(result,2) == false){
+           
+          $("p#pk-field").text(result.data);
+          $("key#pk-pk").text(result.data);       
+          setStep(3);         
+        }
         
       }).catch(error => {
         // Failure
@@ -397,11 +402,13 @@ javascript:
   function checkLogged() {
     $('#error-msg').text("");
 
-    callApi("users/logged").then(result => {      
-      result.object == "error" ? setStep(1) : (     
-       $("#h-live").attr("href","javascript:getKeys()"),        
-       setStep(2)  
-      )
+    callApi("users/logged").then(result => {
+      result.message = "";
+      if (isError(result,1) == false){
+         $("#h-live").attr("href","javascript:getKeys()");        
+          setStep(2); 
+      }
+      
 
     }).catch(error => {
         console.error(error)
@@ -417,11 +424,8 @@ javascript:
     callApi("users/keys", {
       method: "GET",      
     }).then(result => {       
-
-        if (result.object == "error") { 
-          $('#error-msg').text(result.message);
-        }
-        else{  
+        if (isError(result,2) == false){
+         
           $("p#pk-field").text("");
           for (i = 0; i < result.data.length; i++) {            
               $("p#pk-field").append('<p>'+ result.data[i].alias +'<\p>' +            
@@ -444,10 +448,12 @@ javascript:
 
   
   function login() {
-    setStep(0);
+    $('#error-msg').text("")
+    setStep(1.1);
   }
 
   function register() {
+    $('#error-msg').text("")
     setStep(1);
   }
  
