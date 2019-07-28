@@ -306,20 +306,44 @@ javascript:
     return new Promise((resolve, reject) => {
       fetch(`${BASE_URL}${endpoint}`, Object.assign(DEFAULT_OPTIONS, options))
         .then(response => resolve(response.json()))
-        .catch(error => reject(error.json()))
+        .catch(error => reject(error)) //this is only triggered on network error or the likes
     })
   }
 
-  function isError(result, stepNumber){
-    if (result.object == "error"){
-      setStep(stepNumber);
+  function errorHandler(result){
+    if (result.object == "error"){     
       $('#error-msg').text(result.message) 
       return true;
     }
     return false;
   }
 
+  function fetchError(error){
+    error == "TypeError: Failed to fetch"? alert("Connection Problem"): alert(error);
+  }
   
+
+  function checkLogged() {
+    $('#error-msg').text("");
+
+    callApi("users/logged").then(result => {      
+      if (result.status == "success") {      
+         $("#h-live").attr("href","javascript:getKeys()");        
+         setStep(2); 
+      }
+      else
+      {
+        setStep(1)
+      }
+      
+
+    }).catch(error => {
+      console.log(error);
+      fetchError(error);
+    })    
+  
+  }  
+
   function registerData() {
     $('#error-msg').text(""); 
 
@@ -327,15 +351,12 @@ javascript:
       method: "POST",
       body: new FormData(registerForm)
     }).then(result => {
-      if (isError(result,1) == false) {
+      if (errorHandler(result) == false) {
           $("#h-live").attr("href","javascript:getKeys()"),        
-       setStep(2)  
-      }    
-
-      
+          setStep(2);  
+      }         
     }).catch(error => {
-      
-      $('#error-msg').text(error.message)
+      fetchError(error);      
     })
   }
  
@@ -352,16 +373,13 @@ javascript:
       method: "POST",
       body: new FormData(loginForm)
     }).then(result => {
-      if (isError(result,1.1) == false){
-          
-       $("#h-live").attr("href","javascript:getKeys()"),        
-       setStep(2)  
+      if (errorHandler(result) == false){          
+       $("#h-live").attr("href","javascript:getKeys()");        
+       setStep(2);  
      }
       
-    }).catch(error => {
-      
-      console.error(error)
-      $('#error-msg').text(error.message)
+    }).catch(error => {      
+      fetchError(error);      
     })
 
   }
@@ -378,8 +396,7 @@ javascript:
         body: new FormData(cgnForm),
        
       }).then(result => {
-        if (isError(result,2) == false){
-           
+        if (errorHandler(result) == false){           
           $("p#pk-field").text(result.data);
           $("key#pk-pk").text(result.data);       
           setStep(3);         
@@ -387,8 +404,8 @@ javascript:
         
       }).catch(error => {
         // Failure
-        console.error(error)
-        $('#error-msg').text(error.message)
+        fetchError(error);
+        
       })
   }  
   var cgnForm = document.getElementById("cgn-form");
@@ -397,26 +414,6 @@ javascript:
     cgnData();
   });
 
- 
-  
-  function checkLogged() {
-    $('#error-msg').text("");
-
-    callApi("users/logged").then(result => {
-      result.message = "";
-      if (isError(result,1) == false){
-         $("#h-live").attr("href","javascript:getKeys()");        
-          setStep(2); 
-      }
-      
-
-    }).catch(error => {
-        console.error(error)
-        $('#error-msg').text(error.message)
-    })    
-  
-  }    
-
   
   function getKeys() {
     $('#error-msg').text("");  
@@ -424,23 +421,20 @@ javascript:
     callApi("users/keys", {
       method: "GET",      
     }).then(result => {       
-        if (isError(result,2) == false){
-         
+        if (errorHandler(result) == false){         
           $("p#pk-field").text("");
           for (i = 0; i < result.data.length; i++) {            
               $("p#pk-field").append('<p>'+ result.data[i].alias +'<\p>' +            
-                                    '<p>'+ result.data[i].public_key +'<\p><hr>');              
-              
+                                    '<p>'+ result.data[i].public_key +'<\p><hr>');
           }     
            $("key#pk-pk").text(result.data[result.data.length-1].public_key);
           setStep(3);  
         }
 
     }).catch(error => {
-        console.error(error)
-        $('#error-msg').text(error.message)
-        alert(error.message)
-        $('#startModal').modal('show');
+      console.log(error)
+        fetchError(error);
+        
     })    
 
    
