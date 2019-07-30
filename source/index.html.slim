@@ -4,31 +4,38 @@ title: BenefitJS, The fastest benefit integration
 
 javascript:
   function setStep(stepNum) {
-    
     const steps = document.querySelectorAll(".step")
     const pages = document.querySelectorAll(".page")    
-   
     
     for (i = 1; i <= steps.length; i++) {
       i == stepNum ?
-        (steps[i-1].classList.add('active'),pages[i-1].classList.add('active')) :        
+        (steps[i-1].classList.add('active'), pages[i-1].classList.add('active')) :        
         (steps[i-1].classList.remove('active'), pages[i-1].classList.remove('active'))
     }
+  }
 
-  //login
-    if(stepNum == 1.1 ) 
-    {
-      steps[0].classList.add('active');
-      steps[0].innerHTML='Login';
-      document.getElementById("modal-body-login").classList.add("active")
-      }
-      else{
-      document.getElementById("modal-body-login").classList.remove("active");
-      steps[0].innerHTML='Register';
-      }       
-        
-    $('#startModal').modal('show');
+  function setForm(variant) {
+    // Variant is either "login" or "register"
+    var step = document.querySelectorAll(".step:first-child")[0];
     
+    // Update header label
+    step.innerHTML = variant[0].toUpperCase() + variant.slice(1)
+
+    // Show correct form
+    if (variant == 'login') {
+      document.getElementById('login-form').classList.add('active')
+      document.getElementById('register-form').classList.remove('active')
+    } else {
+      document.getElementById('login-form').classList.add('active')
+      document.getElementById('register-form').classList.remove('active')
+    }
+    
+    showError('')
+    setStep(1)
+  }
+
+  function showError(msg) {
+    document.getElementById('error-msg').innerText = msg
   }
 
 /! Modal
@@ -50,16 +57,16 @@ javascript:
               a#h-live.step Go Live
       .modal-body.center
         #error-msg
+        
         .page#modal-body-register
           form#register-form
             p.h4.mb-4
             input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
             input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
-            small.form-text.text-muted.mb-4 Choose a secure password
             button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
 
             hr              
-            a href="javascript:login();"
+            a href="javascript:setForm('login');"
               | Already a Member? Login
         
         .page-login#modal-body-login 
@@ -72,10 +79,8 @@ javascript:
 
             hr
             p New User?
-            a href="javascript:register();"
+            a href="javascript:setForm('register');"
               em Sign up
-      
-        
         
         .page#modal-body-upload 
           form#cgn-form
@@ -86,7 +91,6 @@ javascript:
                 label.custom-file-label for="inputGroupFile01" Upload CGN
             
             button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
-        
         
         .page#modal-body-live        
           h3.primary-color Your public key(s):
@@ -114,7 +118,6 @@ javascript:
             |  &lt;/form&gt;
           
           
-
 /! Main content
 .container.above-the-fold
   
@@ -154,7 +157,6 @@ javascript:
         
         form.donate-button#donate-form action="/pay" method="POST" 
           script src="https://fast.benefitjs.com/benefit.js" data-title="Donate to Tarbeia.org" data-button-text="Donate BD 0.1" data-key="donation-to-tarbeia-org" data-transaction-id="19201" data-amount="0.1"
-        
         
       div.center        
           p 
@@ -295,59 +297,54 @@ javascript:
         | Get Started >
 
 javascript:
-  const BASE_URL = "#{ENV['API_URL']}"
+  // without trailing '/'
+  const BASE_URL = "#{ENV['API_URL']}" || "https://api.benefitjs.com"
 
   function callApi(endpoint, options) {
+    // endpoint should include leading '/', e.g. /users/logged
     const DEFAULT_OPTIONS = {
       method: "GET",
-      credentials:"include"
+      credentials: "include"
     }
     
     return new Promise((resolve, reject) => {
       fetch(`${BASE_URL}${endpoint}`, Object.assign(DEFAULT_OPTIONS, options))
-        .then(response => resolve(response.json()))
-        .catch(error => reject(error)) //this is only triggered on network error or the likes
+        .then(response => resolve(response.json())) // includes 4xx/5xx responses
+        .catch(error => {
+          // only triggered on network errors, etc
+          console.log(error);
+          alert("There was a connection error; please try again")
+          reject(error)
+        })
     })
   }
 
   function errorHandler(result){
     if (result.object == "error"){     
-      $('#error-msg').text(result.message) 
+      showError(result.message) 
       return true;
     }
     return false;
   }
 
-  function fetchError(error){
-    error == "TypeError: Failed to fetch"? alert("Connection Problem"): alert(error);
-  }
-  
-
   function checkLogged() {
-    $('#error-msg').text("");
+    showError("");
 
-    callApi("users/logged").then(result => {      
+    callApi("/users/logged").then(result => {      
       if (result.status == "success") {      
-         $("#h-live").attr("href","javascript:getKeys()");        
-         setStep(2); 
+        $("#h-live").attr("href","javascript:getKeys()");        
+        setStep(2); 
+      } else {
+        setStep(1);
       }
-      else
-      {
-        setStep(1)
-      }
-      
-
-    }).catch(error => {
-      console.log(error);
-      fetchError(error);
     })    
   
   }  
 
   function registerData() {
-    $('#error-msg').text(""); 
+    showError(""); 
 
-    callApi("users/register", {
+    callApi("/users/register", {
       method: "POST",
       body: new FormData(registerForm)
     }).then(result => {
@@ -355,8 +352,6 @@ javascript:
           $("#h-live").attr("href","javascript:getKeys()"),        
           setStep(2);  
       }         
-    }).catch(error => {
-      fetchError(error);      
     })
   }
  
@@ -368,8 +363,8 @@ javascript:
 
 
   function loginData() {
-    $('#error-msg').text("");     
-    callApi("users/login", {
+    showError("");     
+    callApi("/users/login", {
       method: "POST",
       body: new FormData(loginForm)
     }).then(result => {
@@ -377,9 +372,6 @@ javascript:
        $("#h-live").attr("href","javascript:getKeys()");        
        setStep(2);  
      }
-      
-    }).catch(error => {      
-      fetchError(error);      
     })
 
   }
@@ -390,8 +382,8 @@ javascript:
   });
    
   function cgnData() {
-      $('#error-msg').text("");     
-      callApi("users/upload/cgn", {
+      showError("");     
+      callApi("/users/upload/cgn", {
         method: "POST",
         body: new FormData(cgnForm),
        
@@ -401,10 +393,6 @@ javascript:
           $("key#pk-pk").text(result.data);       
           setStep(3);         
         }
-        
-      }).catch(error => {
-        // Failure
-        fetchError(error);
         
       })
   }  
@@ -416,9 +404,9 @@ javascript:
 
   
   function getKeys() {
-    $('#error-msg').text("");  
+    showError("");  
     
-    callApi("users/keys", {
+    callApi("/users/keys", {
       method: "GET",      
     }).then(result => {       
         if (errorHandler(result) == false){         
@@ -431,24 +419,7 @@ javascript:
           setStep(3);  
         }
 
-    }).catch(error => {
-      console.log(error)
-        fetchError(error);
-        
-    })    
-
-   
-  }
-
-  
-  function login() {
-    $('#error-msg').text("")
-    setStep(1.1);
-  }
-
-  function register() {
-    $('#error-msg').text("")
-    setStep(1);
+    })
   }
  
   function isMobile() {
