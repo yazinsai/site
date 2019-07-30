@@ -104,11 +104,11 @@ h3 {
     margin-right: 6px;
   }
 }
-.code{
-  color:purple;
+.code {
+  color: purple;
   text-align: initial;
-  .key{
-    color:green;
+  .key {
+    color: green;
   }
 }
 .pad {
@@ -142,18 +142,11 @@ h3 {
 }
 
 .page {
-  display:none;
-  &.active{
-    display: block;
-  }
+  display: none;
 
-}
-.page-login {
-  display:none;
-  &.active{
+  &.active {
     display: block;
   }
-  
 }
 
 p {
