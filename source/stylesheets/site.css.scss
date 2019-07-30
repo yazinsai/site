@@ -10,10 +10,9 @@ $font-family-sans-serif: "Open Sans", sans-serif;
 $fa-font-path: "font-awesome/fonts";
 
 $headings-font-weight: bold;
-$h1-font-size: 32px;
+$h1-font-size: 36px;
 $h2-font-size: 28px;
 $h3-font-size: 20px;
-
 
 $btn-border-radius-lg: 7px;
 $input-border-radius-lg: 999px;
@@ -23,15 +22,16 @@ $modal-dialog-margin: 0;
 $modal-content-border-width: 0;
 $modal-content-border-radius: 0;
 
-$primary: #B45054;
-$primary-2: #D27984;
+$header-color: #514345;
+$primary: #b45054;
+$primary-2: #d27984;
 $headings-color: #19272e;
 $primary-3: #0d547d;
-$primary-5: #7E6D70;
-$primary-6: #E4DDDE;
+$primary-5: #7e6d70;
+$primary-6: #e4ddde;
 $primary-8: #ecf9fe;
-$light: #FBF9F9;
-$danger: #E7B1BA;
+$light: #fbf9f9;
+$danger: #e7b1ba;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 @import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
@@ -40,20 +40,16 @@ html,
 body {
   height: 100%;
 }
-
+.row-major {
+  flex: 1;
+  padding-bottom: 47px;
+}
 .above-the-fold {
   @include media-breakpoint-up(md) {
     height: 100%;
     display: flex;
     flex-direction: column;
 
-    .row-major {
-      flex: 1;
-
-      .list-of-fees {
-        height: 350px;
-      }
-    }
     .row-minor {
       padding-bottom: 2rem;
 
@@ -63,11 +59,13 @@ body {
     }
   }
 }
-
+.div-center {
+  margin: 0 auto;
+}
 h1 {
   text-align: center;
   line-height: 140%;
-
+  color: $header-color;
   margin-top: 2rem;
   margin-bottom: 2rem;
 
@@ -79,7 +77,7 @@ h2 {
   margin-top: 2rem;
   margin-bottom: 1.5rem;
   line-height: 165%;
-
+  color: $header-color;
   &.subtitle {
     text-align: center;
 
@@ -101,16 +99,60 @@ h3 {
 
     display: inline-block;
     width: 35px;
-    
+
     text-align: center;
     margin-right: 6px;
   }
 }
-
-
+.code {
+  color: purple;
+  text-align: initial;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  .key {
+    color: green;
+  }
+}
+.pad {
+  padding: 15px;
+}
 .primary-color {
   color: $primary;
-   
+}
+
+.step-header {
+  a.step {
+    background-image: url("../images/ellipse_grey.png");
+    background-position: bottom center;
+    background-repeat: no-repeat;
+
+    display: block;
+    text-align: center;
+    padding-bottom: 20px;
+
+    margin-top: 1.5rem;
+    font-weight: normal;
+    color: #a79a9c;
+    line-height: 165%;
+
+    &.active {
+      background-image: url("../images/ellipse_red.png");
+      color: $primary;
+      font-weight: bold;
+    }
+  }
+}
+
+.page {
+  display: none;
+
+  &.active {
+    display: block;
+  }
 }
 
 p {
@@ -123,14 +165,25 @@ img {
   max-width: 100%;
 }
 .badge-color {
-  color:$light;
+  color: $light;
 }
 
 .fa-color {
   color: $primary-5;
 }
-.regular-font{
+.regular-font {
   font-weight: normal;
+}
+.pattern {
+  background: url("../images/pattern.svg");
+  background-repeat: no-repeat;
+  /* background-attachment: fixed; */
+  background-position: left top;
+  /*padding: 23px 25px 0px 0px;
+  margin: 10px 6px 0px 0px;*/
+}
+#error-msg {
+  color: $danger;
 }
 
 .btn {
@@ -140,27 +193,35 @@ img {
     position: relative;
     margin: 1.5rem auto;
     padding: 15px 35px 15px 35px;
-
-    text-transform: uppercase;
     font-weight: bold;
     font-size: 17px;
     line-height: 140%;
-
-
-    
   }
 }
 
 .btn-bg-primary {
   background: linear-gradient(180deg, $primary-2 0%, $primary 100%);
   box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35);
-  
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+  width: 270px;
 }
 
 .btn-bg-light {
   background: linear-gradient(180deg, $light 0%, $light 100%);
   box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35);
-  color:grey
+  color: grey;
+  border-color: #c4bbbc;
+}
+
+.header-links {
+  text-align: center;
+
+  a {
+    & + a:before {
+      content: "|";
+      margin: 0 10px;
+    }
+  }
 }
 
 .modal,
@@ -174,12 +235,6 @@ img {
 
   .modal-dialog {
     margin: 0 auto;
-  }
-
-  .modal-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
   }
 
   input.form-control {
@@ -201,81 +256,70 @@ img {
 
   .close-button {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: -2px;
+    right: -9px;
     background: transparent;
     border: 0;
     cursor: pointer;
+    img {
+      padding: 5px;
+    }
   }
-
 }
 
 .modal-bar {
-  position: absolute;
-    top: 28px;
-}
-
-.modal-head {
-  padding: 10px 10px 0px 10px;
-  
+  position: fixed;
+  top: 28px;
 }
 
 .dot {
-  padding:0px
+  padding: 0px;
 }
 .primary-bg {
-  background-color: #FEF6F7;
+  background-color: #fef6f7;
 }
 
 .rectangle-number {
   position: absolute;
   z-index: 1;
-  margin-top: -17px;
-  background-color: $primary !important
+  margin-top: -40px;
+  background-color: $primary !important;
 }
 
 .item {
   display: inline-block;
-  background:  #F9E6E9;
+  background: #f9e6e9;
   min-height: 250px;
-  min-width: 400px;
-  margin: 2em 1em;
+  min-width: 90%;
+  margin: 2em 0.4em;
   color: $primary;
   position: relative;
 
-  border: 1px solid #FEF6F7;
+  border: 1px solid #fef6f7;
   box-sizing: border-box;
   box-shadow: 0px 3px 1px rgba(129, 54, 62, 0.25);
   border-radius: 5px;
 
   @media screen and (max-width: 500px) {
     min-height: 200px;
-    min-width: 200px;
+    min-width: 90%;
   }
- 
 }
 
 .how-rectangle {
   position: relative;
-  background: #F9E6E9;
+  background: #f9e6e9;
   border-radius: 0.4em;
-  padding: 2rem 1rem;
+  padding: 0.4rem 1rem;
 
   font-size: 18px;
   line-height: 165%;
 
   color: $primary;
- 
-
- 
-
-
-   
 }
 
 .how-to-wrapper > .row {
   overflow-x: auto;
-  
 }
 .how-to-wrapper > .row > .col-sm-6 {
   display: inline-block;
@@ -299,7 +343,7 @@ img {
 }
 
 .inline-buttons {
-  margin:10px;
+  margin: 10px;
 }
 .feature-row {
   margin-top: 3rem;
@@ -312,8 +356,6 @@ img {
   margin-bottom: 2rem;
   text-align: center;
 }
-
-
 
 .message-stack {
   position: absolute;
@@ -353,4 +395,22 @@ img {
 
 .center {
   text-align: center;
+}
+
+.donate-button {
+  position: relative;
+  margin: 1.5rem auto;
+  padding: 15px 35px 15px 35px;
+  font-weight: bold;
+  font-size: 17px;
+  line-height: 140%;
+}
+
+#donate-form {
+  button {
+    background: linear-gradient(180deg, $light 0%, $light 100%) !important;
+    box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35) !important;
+    color: grey;
+    border-color: #c4bbbc !important;
+  }
 }

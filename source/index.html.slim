@@ -2,264 +2,421 @@
 title: BenefitJS, The fastest benefit integration
 ---
 
+javascript:
+  // without trailing '/'
+  const BASE_URL = "#{ENV['API_URL']}" || "https://api.benefitjs.com"
+
+  function callApi(endpoint, options) {
+    // endpoint should include leading '/', e.g. /users/logged
+    const DEFAULT_OPTIONS = {
+      method: "GET",
+      credentials: "include"
+    }
+    
+    return new Promise((resolve, reject) => {
+      fetch(`${BASE_URL}${endpoint}`, Object.assign(DEFAULT_OPTIONS, options))
+        .then(response => resolve(response.json())) // includes 4xx/5xx responses
+        .catch(error => {
+          // only triggered on network errors, etc
+          console.log(error);
+          alert("There was a connection error; please try again")
+          reject(error)
+        })
+    })
+  }
+
+  function setScreen(screenName) {
+    switch(screenName) {
+      case 'login':
+      case 'register':
+        // Update header text
+        var step = document.querySelectorAll(".step:first-child")[0];
+        step.innerHTML = capitalize(screenName);
+
+        setHeader(0)
+        setPage(screenName)
+        break;
+      case 'upload':
+      $('#h-live').attr("href", "javascript:setScreen('live')");  
+        setHeader(1)
+        setPage('upload')
+        break;
+      case 'live':
+        $('#h-upload').attr("href", "javascript:setScreen('upload')"); 
+        retrieveKeys()
+        setHeader(2)
+        setPage('live')
+        break;
+    }
+
+    showError("") // clear lingering error messages
+  }
+
+  function capitalize(str) {
+    return str[0].toUpperCase() + str.slice(1)
+  }
+
+  function setHeader(stepNum) {
+    const steps = document.querySelectorAll(".step")    
+    
+    for (i = 0; i < steps.length; i++) {
+      i == stepNum ?
+        steps[i].classList.add('active') :        
+        steps[i].classList.remove('active')
+    }
+  }
+
+  function setPage(pageId) {
+    const pages = document.querySelectorAll(".page")
+    for (i = 0; i < pages.length; i++) {
+      pages[i].id == "page-" + pageId ?
+        pages[i].classList.add('active') :
+        pages[i].classList.remove('active')
+    }
+  }
+
+  function showError(msg) {
+    document.getElementById('error-msg').innerText = msg
+  }
+
+  function isError(result) {
+    if (result.object == "error"){     
+      showError(result.message) 
+      return true;
+    }
+    return false;
+  }
+
+  function checkLogged() {
+    callApi("/users/logged").then(result => {      
+      if (result.status == "success") {
+        // Logged in already                      
+        setScreen('upload'); 
+      } else {
+        setScreen('register');
+      }
+
+      $('#startModal').modal('show')
+    })    
+  
+  }
+
+  window.addEventListener('DOMContentLoaded', function(e) {
+    // Add our event listeners once the DOM is fully loaded
+    frmRegister.addEventListener("submit", registrationHandler);
+    frmLogin.addEventListener("submit", loginHandler)
+    frmUpload.addEventListener("submit", uploadHandler);
+  });
+
+  function registrationHandler(e) {
+    e.preventDefault(); // prevent submission
+    showError(""); 
+
+    callApi("/users/register", {
+      method: "POST",
+      body: new FormData(frmRegister)
+    }).then(result => {
+      if (!isError(result)) {
+        setScreen('upload')
+      }
+    })
+  }
+
+  function loginHandler(e) {
+    e.preventDefault(); // prevent submission
+    showError("");
+
+    callApi("/users/login", {
+      method: "POST",
+      body: new FormData(frmLogin)
+    }).then(result => {
+      if (!isError(result)) {  
+       setScreen('upload');  
+     }
+    })
+  }
+   
+  function uploadHandler(e) {
+    e.preventDefault(); // prevent submission
+    showError("");
+
+    callApi("/users/upload/cgn", {
+      method: "POST",
+      body: new FormData(frmUpload),
+    }).then(result => {
+      if (!isError(result)){           
+        $("p#pk-field").text(result.data);
+        $("key#pk-pk").text(result.data);
+        setScreen('live');         
+      }
+    })
+  }  
+
+  
+  function retrieveKeys() {
+    callApi("/users/keys").then(result => {       
+      if (!isError(result)){
+        $("p#pk-field").text("");
+        for (i = 0; i < result.data.length; i++) {            
+          $("p#pk-field").append('<p>'+ result.data[i].alias +'<\p>' +            
+                                 '<p>'+ result.data[i].public_key +'<\p><hr>');
+        }     
+        $("key#pk-pk").text(result.data[result.data.length-1].public_key);
+      }
+    })
+  }
+
 /! Modal
 #startModal.modal role="dialog" tabindex="-1" data-backdrop="static"
   .modal-dialog role="document" 
     .modal-content
-      .modal-body.center
-       
-        div
+      .modal-title
+        div       
           button.close-button data-dismiss="modal" 
-            img src="images/close.svg" /
-          .row.center.modal-bar
-            col-sm-4
-              h3.primary-color.modal-head 
-                strong Register
-              img.dot src="images/ellipse_red.png" 
-            col-sm-4
-              h3.modal-head Upload CGN
-              img.dot src="images/ellipse_grey.png"  
-            col-sm-4
-              h3.modal-head Go Live
-              img.dot src="images/ellipse_grey.png"
-          
-          form id="register-form" action="http://127.0.0.1:3666/users/register" method="post"
+              img src="images/close.svg" /
+        /! the display inline to avoid step-header blocking the close button
+        .container.fluid-width.step-header style=('display:inline;') 
+          .row
+            .col
+              a#h-register.step.active Register
+            .col
+              a#h-upload.step Upload CGN
+            .col
+              a#h-live.step Go Live
+      .modal-body.center
+        #error-msg
+        #page-register.page.active
+          form#frmRegister
             p.h4.mb-4
             input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
             input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
-            small.form-text.text-muted.mb-4 Choose a secure password
             button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
 
+            hr              
+            a href="javascript:setScreen('login');"
+              | Already a Member? Login
+        
+        #page-login.page
+          form#frmLogin
+            p.h4.mb-4
+            input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
+            input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
+            
+            button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue 
+
             hr
-              p By clicking
+            p New User?
+            a href="javascript:setScreen('register');"
               em Sign up
-                | you agree to our terms of service
-                | Already member?
         
-
-          
-
-#uploadModal.modal role="dialog" tabindex="-1" data-backdrop="static"
-  .modal-dialog role="document" 
-    .modal-content
-      .modal-body.center
-        
-        div
-          button.close-button data-dismiss="modal" 
-            img src="images/close.svg" /
-          .row.center.modal-bar
-            col-sm-4
-              h3.modal-head Register
-              img.dot src="images/ellipse_grey.png" 
-            col-sm-4
-              h3.primary-color.modal-head 
-                strong Upload CGN
-              img.dot src="images/ellipse_red.png"  
-            col-sm-4
-              h3.modal-head Go Live
-              img.dot src="images/ellipse_grey.png"
-          form action="/" method="post" enctype="multipart/form-data"
-          
-          .input-group
-            .input-group-prepend
-              span.input-group-text id="inputGroupFileAddon01" Upload 
-            .cutom-file
-              input.custom-file-input type="file" name="cgnFile" id="cgnFile" aria-describedby="inputGroupFileAddon01"
-              label.custom-file-label for="inputGroupFile01" Upload CGN
+        #page-upload.page
+          form#frmUpload
+            .input-group
+              .input-group-prepend
+                span.input-group-text id="inputGroupFileAddon01" Upload               
+                input.custom-file-input type="file" name="cgnFile" id="cgnFile" aria-describedby="inputGroupFileAddon01"
+                label.custom-file-label for="inputGroupFile01" Upload CGN
             
             button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
         
-
+        #page-live.page        
+          h3.primary-color Your public key(s):
+          p id="pk-field"
           
-                
-
+          p.code.primary-color id="pk-code"
+          pre.code
+            
+            |  &lt;form action=&quot;/pay&quot; method=&quot;POST&quot;&gt;
+            br
+            |    &lt;script src=&quot;https://fast.benefitjs.com/benefit.js&quot;
+            br
+            |      data-key=&quot;
+            key.key#pk-pk key_...
+            |&quot;
+            br
+            |      data-transaction-id=&quot;1234&quot;
+            br  
+            |      data-amount=&quot;1&quot;&gt;
+            br
+            |    &lt;/script&gt;
+            br
+            |  &lt;/form&gt;
+          
+          
 /! Main content
 .container.above-the-fold
+  
+  .header-links
+    a href="#howto" How To
+    a href="#features" Features
+    a href="#pricing" Pricing
+    a href="#contact" Contact
+
+
   .row.row-major
-    .col-md.my-auto
+    .my-auto
       h1
-        | The 
-        span.primary-color easiest 
+        | The easiest 
         | way to accept BENEFIT 
         
       p.center Accept online debit card payments in Bahrain effortlessly
-  .row.row-major
-    .col-md
-      .my-auto.order-md-1.center
-        img src="images/iphone-frame-2.png" /
-        .row          
-          .col-xs-6.mx-auto                            
-            button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#startModal" data-toggle="modal" style=("display: block;") 
-              | Get Started
-          .col-xs-6.mx-auto                 
-            button.btn.btn-primary.btn-lg.btn-bg-light data-target="#uploadModal" data-toggle="modal" style=("display: block;") 
-              | Try it
-            
+    
+    .div-center      
+      img src="images/iphone-frame-2.png" /
+      .row          
+        .col-xs-6.mx-auto                            
+          button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged();" style=("display: block; width:100%;") 
+            | Get Started
+        .col-xs-6.mx-auto                 
+          button.btn.btn-primary.btn-lg.btn-bg-light data-target="#uploadModal" data-toggle="modal" style=("display: block;") 
+            | Try it
+        
       
 
 .container
-  .row
-    .col-md.center      
+  .row.row-major id="features"
+    div.center      
       h2 Painless, one-step integration
-      .col-md.my-auto.order-md-1.center
+      div.center
         img src="images/carbon.png"
         
-        button.btn.btn-primary.btn-lg.btn-bg-light data-target="#"  
-          | Donate BD 0.100
-
-      .row
-        .col.center
+        form.donate-button#donate-form action="/pay" method="POST" 
+          script src="https://fast.benefitjs.com/benefit.js" data-title="Donate to Tarbeia.org" data-button-text="Donate BD 0.1" data-key="donation-to-tarbeia-org" data-transaction-id="19201" data-amount="0.1"
+        
+      div.center        
           p 
             | This is a 
             strong live demo 
             | of the BenefitJS library.
           
-          p All donations are made to Khairia.org
+          p All donations are made to Tarbeia.com
           
-  .row.primary-bg
-    .col-md.my-auto.order-md-1.center       
+  .row.row-major.primary-bg
+    .div-center       
       .display-1
         i.fa.fa-clock-o
       
-    .col-md.order-md-0
+    div
       .center
         h2 
           | Unbelievably 
           em fast...          
-      p
-        | Your customer can finish his transaction increadibly fast. 
-        | Forget about the slow redirects
-      p Imagine closing your sales in seconds.  
+      .pad
+        p
+          | Your customer can finish his transaction increadibly fast. 
+          | Forget about the slow redirects
+        p Imagine closing your sales in seconds.  
   
   .row
-    .col-md.my-auto.order-md-1.center
+    .div-center.order-md-1
       .display-1
         li.fa.fa-thumbs-up
-    .col-md.order-md-0
+    div.order-md-0
       .center
         h2 Beautifully crafted user experience
-                    
-      p
-        | Your customer will feel right at home with the checkout button. 
-        | BenefitJS seemlessly integrates with your website with a simple script
-      p Design your app or website however you like.  
+      .pad              
+        p
+          | Your customer will feel right at home with the checkout button. 
+          | BenefitJS seemlessly integrates with your website with a simple script
+        p Design your app or website however you like.  
       
-    .col-md
-      .center
-        button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#" 
+  
+  div.center
+        button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()" 
           | Start Now >
   
-  .row
-    .col-md
-      .center
+  .row id="howto"
+    .div-center
         h2 How it works
 
   
   .how-to-wrapper
-    .row.text-center.flex-nowrap
-      
+    .row.text-center.flex-nowrap      
       .item
         h3.center
           .billiard-ball.rectangle-number 1
         .how-rectangle
           h3.center.primary-color            
             strong Register
-          p this is an example of how it would look like 
+          p This usually takes a couple of seconds and will enable you to easily manage your accounts for different sites.
       .item
         h3.center
           .billiard-ball.rectangle-number 2
         .how-rectangle
           h3.center.primary-color            
             strong Upload your CGN file        
-          p this is an example of how it would look like
+          p Choose and Upload the CGN file you want to use to accept payments on your site. 
       .item
         h3.center
           .billiard-ball.rectangle-number 3
         .how-rectangle
           h3.center.primary-color            
             strong Go Live!        
-          p this is an example of how it would look like   
+          p You will get a snippet that you can add to your website and thats it.   
 
   
-  .col-md
-    .center
-      button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#"  
+  div.center
+      button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()"  
         | Get Started >
           
-  .row
-    .col-md
-      .center
-        h2 Pricing
+  .row.row-major#pricing
+    div.div-center.center
+      h2 Pricing
 
-    .col-md
-      h2.primary-color.center.regular-font
-        | The basic, 
-        strong 100% free 
-        | Plan
-    .col-md
-      h3
-        span.billiard-ball 
-          i.fa.fa-check.fa-color
-        | Accept unlimited payments
-      h3
-        span.billiard-ball 
-          i.fa.fa-check.fa-color
-        | Easy integration, zero setup    
-
-    .col-md
-      .center
-        button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#"  
-          | Start Free >
-
-  .row
-    .col-md
-      .center
-        h2.primary-color.regular-font 
-          | The 
-          strong Premium 
+      div.center
+        p.primary-color.center.regular-font style="font-size:22px"
+          | The basic, 
+          strong 100% free 
           | Plan
+      div
+        h3
+          span.billiard-ball 
+            i.fa.fa-check.fa-color
+          | Accept unlimited payments
+        h3
+          span.billiard-ball 
+            i.fa.fa-check.fa-color
+          | Easy integration, zero setup    
 
-    .col-md
-      p.center Everything in the Basic plan, plus:
-      h3 
-        span.billiard-ball 
-          i.fa.fa-check.fa-color 
-        | Recurring payments
-        .badge.badge-danger.primary-color NEW
-      h3
-        span.billiard-ball
-          i.fa.fa-check.fa-color
-        | Dashboard access
-      h3
-        span.billiard-ball 
-          i.fa.fa-check.fa-color
-        | Payment analytics 
-      h3
-        span.billiard-ball 
-          i.fa.fa-check.fa-color
-        | Priority Enterprise support 
+      div.center
+          button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()"  
+            | Start Free >
+
+  .row.row-major.pattern
+    div.div-center      
+      p.primary-color.center.regular-font style="font-size:22px"
+        | The 
+        strong Premium 
+        | Plan
+
+      div.div-center        
+        p.center Everything in the Basic plan, plus:
+        h3 
+          span.billiard-ball 
+            i.fa.fa-check.fa-color 
+          | Recurring payments
+          .badge.badge-danger.primary-color NEW
+        h3
+          span.billiard-ball
+            i.fa.fa-check.fa-color
+          | Dashboard access
+        h3
+          span.billiard-ball 
+            i.fa.fa-check.fa-color
+          | Payment analytics 
+        h3
+          span.billiard-ball 
+            i.fa.fa-check.fa-color
+          | Priority Enterprise support 
       
 
-    .col-md
-      .center
-        button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#" 
+      div.center#contact
+            
+        a.btn.btn-primary.btn-lg.btn-bg-primary href="mailto:sales@benefitjs.com" 
           | Contact Sales
 
   .row
-    .col-md
-      .center
-        h2.primary-color Ready to get started?
-
-    .col-md
-      .center
-        button.btn.btn-primary.btn-lg.btn-bg-primary data-target="#"  
-          | Get Started >
-
-javascript:
-   
-
-  function isMobile() {
-    var check = false;
-    (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
-    return check;
-  };
+    div.div-center.center      
+      h2.fa-color Ready to get started?
+      button.btn.btn-primary.btn-lg.btn-bg-primary.center onclick="javascript:checkLogged()" 
+        | Get Started >
