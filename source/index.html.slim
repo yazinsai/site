@@ -37,10 +37,12 @@ javascript:
         setPage(screenName)
         break;
       case 'upload':
+      $('#h-live').attr("href", "javascript:setScreen('live')");  
         setHeader(1)
         setPage('upload')
         break;
       case 'live':
+        $('#h-upload').attr("href", "javascript:setScreen('upload')"); 
         retrieveKeys()
         setHeader(2)
         setPage('live')
@@ -88,7 +90,7 @@ javascript:
   function checkLogged() {
     callApi("/users/logged").then(result => {      
       if (result.status == "success") {
-        // Logged in already      
+        // Logged in already                      
         setScreen('upload'); 
       } else {
         setScreen('register');
@@ -144,7 +146,7 @@ javascript:
     }).then(result => {
       if (!isError(result)){           
         $("p#pk-field").text(result.data);
-        $("key#pk-pk").text(result.data);       
+        $("key#pk-pk").text(result.data);
         setScreen('live');         
       }
     })
@@ -237,8 +239,6 @@ javascript:
             |      data-amount=&quot;1&quot;&gt;
             br
             |    &lt;/script&gt;
-            br
-            |    &lt;!-- renders &apos;pay&apos; button, submits form when done --&gt;
             br
             |  &lt;/form&gt;
           
