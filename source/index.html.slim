@@ -106,6 +106,8 @@ javascript:
     frmRegister.addEventListener("submit", registrationHandler);
     frmLogin.addEventListener("submit", loginHandler)
     frmUpload.addEventListener("submit", uploadHandler);
+
+    window.setInterval(cycleFeatures, 4500);
   });
 
   function registrationHandler(e) {
@@ -150,9 +152,23 @@ javascript:
         setScreen('live');         
       }
     })
-  }  
+  }
 
-  
+  var currentFeature = 0;
+  function cycleFeatures() {
+    /**
+     * Cycles through the list of features we have,
+     * fading each one in turn
+     */
+    features = document.querySelectorAll(".feature")
+    for (i = 0; i < features.length; i++) {
+      i == currentFeature ?
+        features[i].classList.add('active') :
+        features[i].classList.remove('active')
+    }
+    currentFeature = (currentFeature + 1) % features.length;
+  }
+
   function retrieveKeys() {
     callApi("/users/keys").then(result => {       
       if (!isError(result)){
@@ -311,9 +327,14 @@ javascript:
           em seconds.  
   
   .row
-    .div-center.order-md-1
-      img src="images/little-things.png"
-      
+    .center.order-md-1
+      .features
+        img.bg src="images/modal-error.png"
+        img.feature src="images/feature-responsive.svg" style="top:-50px;left:50px;"
+        img.feature src="images/feature-errors.svg" style="top:100px;left:50px;"
+        img.feature src="images/feature-brandable.svg" style="top:110px;left:50px;"
+        img.feature.active src="images/feature-masked.svg" style="top:210px;left:20px;"
+
     div.order-md-0
       .center
         h2 Beautifully crafted user experience
@@ -329,7 +350,7 @@ javascript:
           | Start Now >
   
   .row id="howto"
-    .div-center
+    .center
         h2 How it works
 
   
@@ -363,7 +384,7 @@ javascript:
         | Get Started >
           
   .row.row-major#pricing
-    div.div-center.center
+    div.center.center
       h2 Pricing
 
       div.center
@@ -386,13 +407,13 @@ javascript:
             | Start Free >
 
   .row.row-major.pattern
-    div.div-center      
+    div.center      
       p.primary-color.center.regular-font style="font-size:22px"
         | The 
         strong Premium 
         | Plan
 
-      div.div-center        
+      div.center        
         p.center Everything in the Basic plan, plus:
         h3 
           span.billiard-ball 
@@ -419,7 +440,7 @@ javascript:
           | Contact Sales
 
   .row
-    div.div-center.center
+    div.center.center
       h2.fa-color Ready to get started?
       button.btn.btn-primary onclick="javascript:checkLogged()" 
         | Get Started >

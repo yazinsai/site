@@ -423,3 +423,21 @@ img {
     color: #7e6d70 !important;
   }
 }
+
+.features {
+  position: relative;
+
+  .bg {
+    opacity: 0.5;
+  }
+
+  .feature {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+}
