@@ -257,8 +257,7 @@ javascript:
   .row.row-major
     .my-auto
       h1
-        | The easiest 
-        | way to accept BENEFIT 
+        | The easiest way to accept BENEFIT 
         
       p.center Accept online debit card payments in Bahrain effortlessly.
     
@@ -276,23 +275,25 @@ javascript:
     div.center      
       h2 Painless, one-step integration
       div.center
-        img src="images/carbon.png"
+        .code-sample
+          =partial "code-sample"
         
-        form.donate-button#donate-form action="/pay" method="POST" 
-          script src="https://fast.benefitjs.com/benefit.js" data-title="Donate to Tarbeia.org" data-button-text="Donate BD 0.1" data-key="donation-to-tarbeia-org" data-transaction-id="19201" data-amount="0.1"
+        img.arrow src="images/arrow.svg"
+
+        form#donate action="/pay" method="POST" 
+          script src="https://fast.benefitjs.com" data-title="Tarbeia.org" data-subtitle="100 fils Donation" data-button-text="Donate BD 0.1" data-key="donation-to-tarbeia-org" data-transaction-id="19201" data-amount="0.1"
         
       div.center        
           p 
             | This is a 
             strong live demo 
-            | of the BenefitJS library.
-          
-          p All donations are made to Tarbeia.com
+            | of the BenefitJS library. 
+            br
+            | All donations are made to Tarbeia.org
           
   .row.row-major.primary-bg
-    .div-center       
-      .display-1
-        i.fa.fa-clock-o
+    .center       
+      img src="images/fast.svg"
       
     div
       .center
@@ -301,14 +302,18 @@ javascript:
           em fast...          
       .pad
         p
-          | Your customer can finish his transaction increadibly fast. 
-          | Forget about the slow redirects
-        p Imagine closing your sales in seconds.  
+          | Your customers can now finish their transactions in record time, 
+          strong reducing churn 
+          | on the checkout page. 
+          | Forget about slow redirects, and cryptic error messages.
+        p 
+          | With BenefitJS, sales are closed in 
+          em seconds.  
   
   .row
     .div-center.order-md-1
-      .display-1
-        li.fa.fa-thumbs-up
+      img src="images/little-things.png"
+      
     div.order-md-0
       .center
         h2 Beautifully crafted user experience
