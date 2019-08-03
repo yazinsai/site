@@ -52,16 +52,15 @@ body {
 
     .row-minor {
       padding-bottom: 2rem;
-
-      p.cant-keep-up {
-        text-align: center;
-      }
     }
   }
 }
-.div-center {
-  margin: 0 auto;
+
+.center {
+  margin: 0 auto; // for block elements
+  text-align: center; // for inline elements
 }
+
 h1 {
   text-align: center;
   line-height: 140%;
@@ -186,40 +185,45 @@ img {
   color: $danger;
 }
 
-.btn {
-  cursor: pointer;
-
-  &.btn-lg {
-    position: relative;
-    margin: 1.5rem auto;
-    padding: 15px 35px 15px 35px;
-    font-weight: bold;
-    font-size: 17px;
-    line-height: 140%;
-  }
+.space-around {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 }
 
-.btn-bg-primary {
+.btn {
+  cursor: pointer;
+  position: relative;
+  margin: 1rem auto;
+  padding: 15px 35px 15px 35px;
+  font-weight: bold;
+  font-size: 17px;
+  line-height: 140%;
+  min-width: 150px;
+}
+
+.btn-primary {
   background: linear-gradient(180deg, $primary-2 0%, $primary 100%);
   box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35);
   text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
-  width: 270px;
 }
 
-.btn-bg-light {
-  background: linear-gradient(180deg, $light 0%, $light 100%);
+.btn-secondary {
+  background: linear-gradient(180deg, #fbf9f9 0%, #f2edee 100%);
   box-shadow: inset 0px 3px 2px rgba(254, 246, 247, 0.35);
-  color: grey;
+  color: #7e6d70;
   border-color: #c4bbbc;
 }
 
 .header-links {
+  margin-top: 1rem;
   text-align: center;
 
   a {
     & + a:before {
       content: "|";
-      margin: 0 10px;
+      margin: 0 7px;
+      color: #a79a9c;
     }
   }
 }
@@ -391,10 +395,6 @@ img {
 .message-stack.on .message-bubble {
   opacity: 1;
   transform: scale(1) translateY(0);
-}
-
-.center {
-  text-align: center;
 }
 
 .donate-button {
