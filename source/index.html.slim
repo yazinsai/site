@@ -148,7 +148,7 @@ javascript:
     }).then(result => {
       if (!isError(result)){           
         $("p#pk-field").text(result.data);
-        $("key#pk-pk").text(result.data);
+        document.getElementById("#public-key").innerText =  result.data;
         setScreen('live');         
       }
     })
@@ -242,22 +242,8 @@ javascript:
           
           p.code.primary-color id="pk-code"
           pre.code
-            
-            |  &lt;form action=&quot;/pay&quot; method=&quot;POST&quot;&gt;
-            br
-            |    &lt;script src=&quot;https://fast.benefitjs.com/benefit.js&quot;
-            br
-            |      data-key=&quot;
-            key.key#pk-pk key_...
-            |&quot;
-            br
-            |      data-transaction-id=&quot;1234&quot;
-            br  
-            |      data-amount=&quot;1&quot;&gt;
-            br
-            |    &lt;/script&gt;
-            br
-            |  &lt;/form&gt;
+
+            =partial "code-sample", locals: { key: "<span id='public-key'></span>" }
           
           
 /! Main content
@@ -294,7 +280,7 @@ javascript:
       h2 Painless, one-step integration
       div.center
         .code-sample
-          =partial "code-sample"
+          =partial "code-sample", locals: { key: "..." }
         
         img.arrow src="images/arrow-down.svg"
 
