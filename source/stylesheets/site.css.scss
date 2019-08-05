@@ -301,6 +301,25 @@ video {
   justify-content: space-between;
 }
 
+%rounded {
+  border-radius: 999px;
+  width: 35px;
+  height: 35px;
+  padding-top: 2px;
+  text-align: center;
+}
+
+.feature-bullet {
+  @extend %rounded;
+  background-color: $primary-6;
+  color: $light;
+  display: inline-block;
+
+  position: relative;
+  top: 3px;
+  left: -1px;
+}
+
 .item {
   position: relative; // for absolute to work below
   width: 270px;
@@ -321,12 +340,7 @@ video {
     left: calc(50% - 20px);
     color: $light;
     background-color: $primary;
-    border-radius: 999px;
-
-    width: 35px;
-    height: 35px;
-    padding-top: 2px;
-    text-align: center;
+    @extend %rounded;
   }
 
   .title {
