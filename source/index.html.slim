@@ -174,7 +174,7 @@ javascript:
       if (!isError(result)){
         $("p#pk-field").text("");
         for (i = 0; i < result.data.length; i++) {            
-          $("p#pk-field").append('<p>'+ result.data[i].alias +'<\p>' +            
+          $("p#pk-field").append('<p>'+ result.data[i].alias +'<\p>' +
                                  '<p>'+ result.data[i].public_key +'<\p><hr>');
         }     
         $("key#pk-pk").text(result.data[result.data.length-1].public_key);
@@ -278,7 +278,7 @@ javascript:
       p.center Accept online debit card payments in Bahrain effortlessly.
     
     .center      
-      video(controls autoplay)
+      video(autoplay loop)
         source src="images/benefitjs-checkout.mp4" type="video/mp4"
     
     .space-around
@@ -286,6 +286,7 @@ javascript:
       button.btn.btn-secondary data-target="#uploadModal" data-toggle="modal" Try it
         
       
+
 
 .container
   .row.row-major id="features"
@@ -295,37 +296,34 @@ javascript:
         .code-sample
           =partial "code-sample"
         
-        img.arrow src="images/arrow.svg"
+        img.arrow src="images/arrow-down.svg"
 
         form#donate action="/pay" method="POST" 
           script src="https://fast.benefitjs.com" data-title="Tarbeia.org" data-subtitle="100 fils Donation" data-button-text="Donate BD 0.1" data-key="donation-to-tarbeia-org" data-transaction-id="19201" data-amount="0.1"
         
       div.center        
           p 
+            i.fa.fa-info-circle &nbsp; 
             | This is a 
             strong live demo 
-            | of the BenefitJS library. 
+            | of BenefitJS. 
             br
-            | All donations are made to Tarbeia.org
+            | Donations go to Tarbeia.org
           
   .row.row-major.primary-bg
-    .center       
-      img src="images/fast.svg"
-      
-    div
-      .center
-        h2 
-          | Unbelievably 
-          em fast...          
-      .pad
-        p
-          | Your customers can now finish their transactions in record time, 
-          strong reducing churn 
-          | on the checkout page. 
-          | Forget about slow redirects, and cryptic error messages.
-        p 
-          | With BenefitJS, sales are closed in 
-          em seconds.  
+    .center
+      h2 
+        | Unbelievably 
+        em fast...          
+    .pad
+      p
+        | Your customers can now finish their transactions in record time, 
+        strong reducing churn 
+        | on the checkout page. 
+        | Forget about slow redirects, and cryptic error messages.
+      p 
+        | With BenefitJS, sales are closed in 
+        em seconds.  
   
   .row
     .center.order-md-1
@@ -355,28 +353,22 @@ javascript:
         h2 How it works
 
   
-  .how-to-wrapper
-    .row.text-center.flex-nowrap      
-      .item
-        h3.center
-          .billiard-ball.rectangle-number 1
-        .how-rectangle
-          h3.center.primary-color            
-            strong Register
+  .row
+    .window-items
+      .items
+        .item
+          .number 1
+          .title Register
           p This usually takes a couple of seconds and will enable you to easily manage your accounts for different sites.
-      .item
-        h3.center
-          .billiard-ball.rectangle-number 2
-        .how-rectangle
-          h3.center.primary-color            
-            strong Upload your CGN file        
+
+        .item
+          .number 2
+          .title Upload your CGN file        
           p Choose and Upload the CGN file you want to use to accept payments on your site. 
-      .item
-        h3.center
-          .billiard-ball.rectangle-number 3
-        .how-rectangle
-          h3.center.primary-color            
-            strong Go Live!        
+          
+        .item
+          .number 3
+          .title Go Live!        
           p You will get a snippet that you can add to your website and thats it.   
 
   
