@@ -249,52 +249,55 @@ javascript:
 /! Main content
 .container.above-the-fold
   
-  .header-links
-    a href="#howto" How To
-    a href="#features" Features
-    a href="#pricing" Pricing
-    a href="#contact" Contact
-
+  .row
+    .col
+      .header-links
+        a href="#howto" How To
+        a href="#features" Features
+        a href="#pricing" Pricing
+        a href="#contact" Contact
 
   .row.row-major
-    .my-auto
-      h1
-        | The easiest way to accept BENEFIT 
-        
-      p.center Accept online debit card payments in Bahrain effortlessly.
+    .col-md.text-center.text-md-left
+      h1 The easiest way to accept BENEFIT 
+      p Accept online debit card payments in Bahrain effortlessly.
+
+      /! Hidden on mobile
+      .d-none.d-md-block
+        button.btn.btn-primary onclick="javascript:checkLogged();" Get Started
+        span &nbsp;
+        button.btn.btn-secondary data-target="#startModal" data-toggle="modal" Try it
     
-    .center      
+    .col-md.center
       video(autoplay loop)
         source src="images/benefitjs-checkout.mp4" type="video/mp4"
-    
-    .space-around
+  
+  .row.d-md-none
+    /! Only visible on mobile
+    .col-md.center
       button.btn.btn-primary onclick="javascript:checkLogged();" Get Started
+      span &nbsp;
       button.btn.btn-secondary data-target="#startModal" data-toggle="modal" Try it
-        
-      
-
 
 .container
-  .row.row-major id="features"
-    div.center      
+  .row.row-major
+    .col.center
       h2 Painless, one-step integration
-      div.center
-        .code-sample
-          =partial "code-sample", locals: { key: "..." }
-        
-        img.arrow src="images/arrow-down.svg"
+      .code-sample
+        =partial "code-sample", locals: { key: "..." }
+      
+      img.arrow src="images/arrow-down.svg"
 
-        form#donate action="/pay" method="POST" 
-          script src="https://fast.benefitjs.com" data-title="Tarbeia.org" data-subtitle="100 fils Donation" data-button-text="Donate BD 0.1" data-key="donation-to-tarbeia-org" data-transaction-id="19201" data-amount="0.1"
-        
-      div.center        
-          p 
-            i.fa.fa-info-circle &nbsp; 
-            | This is a 
-            strong live demo 
-            | of BenefitJS. 
-            br
-            | Donations go to Tarbeia.org
+      form#donate action="/pay" method="POST" 
+        script src="https://fast.benefitjs.com" data-title="Tarbeia.org" data-subtitle="100 fils Donation" data-button-text="Donate BD 0.1" data-key="donation-to-tarbeia-org" data-transaction-id="19201" data-amount="0.1"
+
+      p 
+        i.fa.fa-info-circle &nbsp; 
+        | This is a 
+        strong live demo 
+        | of BenefitJS. 
+        br
+        | Donations go to Tarbeia.org
           
   .row.row-major.primary-bg
     .center
