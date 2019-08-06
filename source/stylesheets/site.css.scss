@@ -48,16 +48,16 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-
-    .row-minor {
-      padding-bottom: 2rem;
-    }
   }
 }
 
 .center {
-  margin: 0 auto; // for block elements
+  margin-left: auto; // for block elements
   text-align: center; // for inline elements
+}
+
+.mb-1 {
+  margin-bottom: 1 rem;
 }
 
 h1 {
@@ -104,9 +104,7 @@ h3 {
     color: green;
   }
 }
-.pad {
-  padding: 15px;
-}
+
 .primary-color {
   color: $primary;
 }
@@ -280,9 +278,6 @@ video {
 
 .dot {
   padding: 0px;
-}
-.primary-bg {
-  background-color: #fef6f7;
 }
 
 .window-items {

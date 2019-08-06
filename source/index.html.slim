@@ -248,7 +248,6 @@ javascript:
           
 /! Main content
 .container.above-the-fold
-  
   .row
     .col
       .header-links
@@ -280,7 +279,7 @@ javascript:
       button.btn.btn-secondary data-target="#startModal" data-toggle="modal" Try it
 
 .container style="padding: 0;"
-  .row.no-gutters
+  .row.no-gutters.mb-1
     .col.center
       h2 Painless, one-step integration
       .code-sample
@@ -298,24 +297,29 @@ javascript:
         | of BenefitJS. 
         br
         | Donations go to Tarbeia.org
-          
-  .row.primary-bg
-    .center
-      h2 
-        | Unbelievably 
-        em fast...          
-    .pad
-      p
-        | Your customers can now finish their transactions in record time, 
-        strong reducing churn 
-        | on the checkout page. 
-        | Forget about slow redirects, and cryptic error messages.
-      p 
-        | With BenefitJS, sales are closed in 
-        em seconds.  
-  
+
+.container-fluid style="background-color: #fef6f7;"
+  .container
+    .row
+      .col-md
+        p '[Placeholder for image]
+
+      .col-md
+        h2.text-center.text-md-left 
+          | Unbelievably 
+          em fast...          
+        p
+          | Your customers can now finish their transactions in record time, 
+          strong reducing churn 
+          | on the checkout page. 
+          | Forget about slow redirects, and cryptic error messages.
+        p 
+          | With BenefitJS, sales are closed in 
+          em seconds.  
+
+.container
   .row
-    .center.order-md-1
+    .col-md.center.order-md-1
       .features
         img.bg src="images/modal-error.png"
         img.feature src="images/feature-responsive.svg" style="top:-50px;left:50px;"
@@ -323,14 +327,12 @@ javascript:
         img.feature src="images/feature-brandable.svg" style="top:110px;left:50px;"
         img.feature.active src="images/feature-masked.svg" style="top:210px;left:20px;"
 
-    div.order-md-0
-      .center
-        h2 Beautifully crafted user experience
-      .pad              
-        p
-          | Your customer will feel right at home with the checkout button. 
-          | BenefitJS seemlessly integrates with your website with a simple script
-        p Design your app or website however you like.  
+    .col-md.order-md-0.my-auto
+      h2.text-center.text-md-left Beautifully crafted user experience 
+      p
+        | Your customer will feel right at home with the checkout button. 
+        | BenefitJS seemlessly integrates with your website with a simple script
+      p Design your app or website however you like.  
       
   
   div.center
