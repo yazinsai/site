@@ -335,15 +335,14 @@ javascript:
       p Design your app or website however you like.  
       
   
-  div.center
-        button.btn.btn-primary onclick="javascript:checkLogged()" 
-          | Start Now >
+  .row
+    .col.center
+      button.btn.btn-primary onclick="javascript:checkLogged()" Start Now &gt;
   
-  .row id="howto"
-    .center
+  #howto.row
+    .col.center
         h2 How it works
 
-  
   .row
     .window-items
       .items
@@ -363,20 +362,26 @@ javascript:
           p You will get a snippet that you can add to your website and thats it.   
 
   
-  div.center
-      button.btn.btn-primary onclick="javascript:checkLogged()"  
-        | Get Started >
-          
-  .row#pricing
-    div.center.center
+  .row
+    .col.center
+      button.btn.btn-primary onclick="javascript:checkLogged()" Get Started >
+        
+  #pricing.row
+    .col.center
       h2 Pricing
+  
+  .row.mb-2
+    .col-md.center
+      p.primary-color.center.regular-font style="font-size:22px"
+        | The 
+        strong Basic 
+        | Plan
 
-      div.center
-        p.primary-color.center.regular-font style="font-size:22px"
-          | The basic, 
-          strong 100% free 
-          | Plan
-      div
+      .d-inline-block.text-left
+        h3
+          .feature-bullet
+            i.fa.fa-check.fa-color
+          | 100% FREE, forever
         h3
           .feature-bullet
             i.fa.fa-check.fa-color
@@ -386,19 +391,17 @@ javascript:
             i.fa.fa-check.fa-color
           | Easy integration, zero setup    
 
-      div.center
-          button.btn.btn-primary onclick="javascript:checkLogged()"  
-            | Start Free >
+      button.btn.btn-primary onclick="javascript:checkLogged()" Start Free >
 
-  .row.pattern
-    div.center      
+    .col-md.center.pattern
       p.primary-color.center.regular-font style="font-size:22px"
         | The 
         strong Premium 
         | Plan
 
-      div style="text-align: left;"        
-        p.center Everything in the Basic plan, plus:
+      .d-inline-block.text-left     
+        .center Everything in the Basic plan, plus:
+        
         h3 
           .feature-bullet 
             i.fa.fa-check.fa-color 

@@ -53,6 +53,7 @@ body {
 
 .center {
   margin-left: auto; // for block elements
+  margin-right: auto; // for block elements
   text-align: center; // for inline elements
 }
 
@@ -283,6 +284,7 @@ video {
 .window-items {
   width: 100%;
   overflow-x: auto;
+  margin-bottom: 2rem;
 }
 
 .items {
@@ -290,6 +292,8 @@ video {
   padding: 0 10px;
   display: flex;
   justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 %rounded {
