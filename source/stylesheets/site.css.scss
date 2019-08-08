@@ -294,6 +294,7 @@ video {
   justify-content: space-between;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 1em;
 }
 
 %rounded {
@@ -328,6 +329,7 @@ video {
   font-size: 18px;
   line-height: 165%;
   color: $primary;
+  text-align: center;
 
   .number {
     position: absolute;
@@ -340,7 +342,10 @@ video {
 
   .title {
     font-weight: bold;
-    color: $primary-5;
+    color: #81363e;
+    text-align: center;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 }
 
