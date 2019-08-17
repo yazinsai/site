@@ -106,6 +106,8 @@ javascript:
     frmRegister.addEventListener("submit", registrationHandler);
     frmLogin.addEventListener("submit", loginHandler)
     frmUpload.addEventListener("submit", uploadHandler);
+
+    window.setInterval(cycleFeatures, 4500);
   });
 
   function registrationHandler(e) {
@@ -146,25 +148,40 @@ javascript:
     }).then(result => {
       if (!isError(result)){           
         $("p#pk-field").text(result.data);
-        $("key#pk-pk").text(result.data);
+        document.getElementById("#public-key").innerText =  result.data;
         setScreen('live');         
       }
     })
-  }  
+  }
 
-  
+  var currentFeature = 0;
+  function cycleFeatures() {
+    /**
+     * Cycles through the list of features we have,
+     * fading each one in turn
+     */
+    features = document.querySelectorAll(".feature")
+    for (i = 0; i < features.length; i++) {
+      i == currentFeature ?
+        features[i].classList.add('active') :
+        features[i].classList.remove('active')
+    }
+    currentFeature = (currentFeature + 1) % features.length;
+  }
+
   function retrieveKeys() {
     callApi("/users/keys").then(result => {       
       if (!isError(result)){
         $("p#pk-field").text("");
         for (i = 0; i < result.data.length; i++) {            
-          $("p#pk-field").append('<p>'+ result.data[i].alias +'<\p>' +            
+          $("p#pk-field").append('<p>'+ result.data[i].alias +'<\p>' +
                                  '<p>'+ result.data[i].public_key +'<\p><hr>');
         }     
         $("key#pk-pk").text(result.data[result.data.length-1].public_key);
       }
     })
   }
+
 
 /! Modal
 #startModal.modal role="dialog" tabindex="-1" data-backdrop="static"
@@ -190,7 +207,7 @@ javascript:
             p.h4.mb-4
             input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
             input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
-            button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
+            button.btn.btn-primary type="submit" Continue
 
             hr              
             a href="javascript:setScreen('login');"
@@ -202,7 +219,7 @@ javascript:
             input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
             input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
             
-            button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue 
+            button.btn.btn-primary type="submit" Continue 
 
             hr
             p New User?
@@ -217,7 +234,7 @@ javascript:
                 input.custom-file-input type="file" name="cgnFile" id="cgnFile" aria-describedby="inputGroupFileAddon01"
                 label.custom-file-label for="inputGroupFile01" Upload CGN
             
-            button.btn.btn-primary.btn-lg.btn-bg-primary type="submit" Continue
+            button.btn.btn-primary type="submit" Continue
         
         #page-live.page        
           h3.primary-color Your public key(s):
@@ -225,198 +242,192 @@ javascript:
           
           p.code.primary-color id="pk-code"
           pre.code
-            
-            |  &lt;form action=&quot;/pay&quot; method=&quot;POST&quot;&gt;
-            br
-            |    &lt;script src=&quot;https://fast.benefitjs.com/benefit.js&quot;
-            br
-            |      data-key=&quot;
-            key.key#pk-pk key_...
-            |&quot;
-            br
-            |      data-transaction-id=&quot;1234&quot;
-            br  
-            |      data-amount=&quot;1&quot;&gt;
-            br
-            |    &lt;/script&gt;
-            br
-            |  &lt;/form&gt;
+            =partial "code-sample", locals: { key: "<span id='public-key'></span>" }
           
           
 /! Main content
 .container.above-the-fold
-  
-  .header-links
-    a href="#howto" How To
-    a href="#features" Features
-    a href="#pricing" Pricing
-    a href="#contact" Contact
+  .row
+    .col
+      .header-links
+        a href="#howto" How To
+        a href="#features" Features
+        a href="#pricing" Pricing
+        a href="#contact" Contact
 
+  .row
+    .col-md.text-center.text-md-left.my-md-auto
+      h1 The easiest way to accept BENEFIT 
+      p Accept online debit card payments in Bahrain effortlessly.
 
-  .row.row-major
-    .my-auto
-      h1
-        | The easiest 
-        | way to accept BENEFIT 
-        
-      p.center Accept online debit card payments in Bahrain effortlessly
+      /! Hidden on mobile
+      .d-none.d-md-block
+        button.btn.btn-primary onclick="javascript:checkLogged();" Get Started
+        span &nbsp;
+        button.btn.btn-secondary data-target="#startModal" data-toggle="modal" Try it
     
-    .div-center      
-      img src="images/iphone-frame-2.png" /
-      .row          
-        .col-xs-6.mx-auto                            
-          button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged();" style=("display: block; width:100%;") 
-            | Get Started
-        .col-xs-6.mx-auto                 
-          button.btn.btn-primary.btn-lg.btn-bg-light data-target="#uploadModal" data-toggle="modal" style=("display: block;") 
-            | Try it
-        
-      
+    .col-md.center
+      video(playsinline autoplay loop)
+        source src="images/benefitjs-checkout.mp4" type="video/mp4"
+  
+  .row.d-md-none
+    /! Only visible on mobile
+    .col-md.center
+      button.btn.btn-primary onclick="javascript:checkLogged();" Get Started
+      span &nbsp;
+      button.btn.btn-secondary data-target="#startModal" data-toggle="modal" Try it
 
-.container
-  .row.row-major id="features"
-    div.center      
+.container style="padding: 0;"
+  .row.no-gutters.mb-1
+    .col.center
       h2 Painless, one-step integration
-      div.center
-        img src="images/carbon.png"
-        
-        form.donate-button#donate-form action="/pay" method="POST" 
-          script src="https://fast.benefitjs.com/benefit.js" data-title="Donate to Tarbeia.org" data-button-text="Donate BD 0.1" data-key="donation-to-tarbeia-org" data-transaction-id="19201" data-amount="0.1"
-        
-      div.center        
-          p 
-            | This is a 
-            strong live demo 
-            | of the BenefitJS library.
-          
-          p All donations are made to Tarbeia.com
-          
-  .row.row-major.primary-bg
-    .div-center       
-      .display-1
-        i.fa.fa-clock-o
+      .code-sample
+        =partial "code-sample", locals: { key: "..." }
       
-    div
-      .center
-        h2 
+      img.arrow src="images/arrow-down.svg"
+
+      form#donate action="/pay" method="POST" 
+        script src="https://fast.benefitjs.com" data-title="Tarbeia.org" data-subtitle="100 fils Donation" data-button-text="Donate BD 0.1" data-key="donation-to-tarbeia-org" data-transaction-id="19201" data-amount="0.1"
+
+      p 
+        i.fa.fa-info-circle &nbsp; 
+        | This is a 
+        strong live demo 
+        | of BenefitJS. 
+        br
+        | Donations go to Tarbeia.org
+
+.container-fluid style="background-color: #fef6f7;"
+  .container
+    .row
+      .col-md
+        p '[Placeholder for image]
+
+      .col-md
+        h2.text-center.text-md-left 
           | Unbelievably 
           em fast...          
-      .pad
         p
-          | Your customer can finish his transaction increadibly fast. 
-          | Forget about the slow redirects
-        p Imagine closing your sales in seconds.  
-  
+          | Your customers can now finish their transactions in record time, 
+          strong reducing churn 
+          | on the checkout page. 
+          | Forget about slow redirects, and cryptic error messages.
+        p 
+          | With BenefitJS, sales are closed in 
+          em seconds.  
+
+.container
   .row
-    .div-center.order-md-1
-      .display-1
-        li.fa.fa-thumbs-up
-    div.order-md-0
-      .center
-        h2 Beautifully crafted user experience
-      .pad              
-        p
-          | Your customer will feel right at home with the checkout button. 
-          | BenefitJS seemlessly integrates with your website with a simple script
-        p Design your app or website however you like.  
+    .col-md.center.order-md-1
+      .features
+        img.bg src="images/modal-error.png"
+        img.feature src="images/feature-responsive.svg" style="top:-50px;left:50px;"
+        img.feature src="images/feature-errors.svg" style="top:100px;left:50px;"
+        img.feature src="images/feature-brandable.svg" style="top:110px;left:50px;"
+        img.feature.active src="images/feature-masked.svg" style="top:210px;left:20px;"
+
+    .col-md.order-md-0.my-auto
+      h2.text-center.text-md-left Beautifully crafted user experience 
+      p
+        | Your customer will feel right at home with the checkout button. 
+        | BenefitJS seemlessly integrates with your website with a simple script
+      p Design your app or website however you like.  
       
   
-  div.center
-        button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()" 
-          | Start Now >
+  .row
+    .col.center
+      button.btn.btn-primary onclick="javascript:checkLogged()" Start Now &gt;
   
-  .row id="howto"
-    .div-center
+  #howto.row
+    .col.center
         h2 How it works
 
-  
-  .how-to-wrapper
-    .row.text-center.flex-nowrap      
-      .item
-        h3.center
-          .billiard-ball.rectangle-number 1
-        .how-rectangle
-          h3.center.primary-color            
-            strong Register
+  .row
+    .window-items
+      .items
+        .item
+          .number 1
+          .title Register
           p This usually takes a couple of seconds and will enable you to easily manage your accounts for different sites.
-      .item
-        h3.center
-          .billiard-ball.rectangle-number 2
-        .how-rectangle
-          h3.center.primary-color            
-            strong Upload your CGN file        
+
+        .item
+          .number 2
+          .title Upload your CGN file        
           p Choose and Upload the CGN file you want to use to accept payments on your site. 
-      .item
-        h3.center
-          .billiard-ball.rectangle-number 3
-        .how-rectangle
-          h3.center.primary-color            
-            strong Go Live!        
+          
+        .item
+          .number 3
+          .title Go Live!        
           p You will get a snippet that you can add to your website and thats it.   
 
   
-  div.center
-      button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()"  
-        | Get Started >
-          
-  .row.row-major#pricing
-    div.div-center.center
+  .row
+    .col.center
+      button.btn.btn-primary onclick="javascript:checkLogged()" Get Started >
+        
+  #pricing.row
+    .col.center
       h2 Pricing
+  
+  .row.mb-2
+    .col-md.center
+      p.primary-color.center.regular-font style="font-size:22px"
+        | The 
+        strong Basic 
+        | Plan
 
-      div.center
-        p.primary-color.center.regular-font style="font-size:22px"
-          | The basic, 
-          strong 100% free 
-          | Plan
-      div
+      .d-inline-block.text-left
         h3
-          span.billiard-ball 
+          .feature-bullet
+            i.fa.fa-check.fa-color
+          | 100% FREE, forever
+        h3
+          .feature-bullet
             i.fa.fa-check.fa-color
           | Accept unlimited payments
         h3
-          span.billiard-ball 
+          .feature-bullet
             i.fa.fa-check.fa-color
           | Easy integration, zero setup    
 
-      div.center
-          button.btn.btn-primary.btn-lg.btn-bg-primary onclick="javascript:checkLogged()"  
-            | Start Free >
+      .center style="padding-bottom: 2rem;"
+        button.btn.btn-primary onclick="javascript:checkLogged()" Start Free >
 
-  .row.row-major.pattern
-    div.div-center      
+    .col-md.center.pattern
       p.primary-color.center.regular-font style="font-size:22px"
         | The 
         strong Premium 
         | Plan
 
-      div.div-center        
-        p.center Everything in the Basic plan, plus:
+      .d-inline-block.text-left     
+        .center Everything in the Basic plan, plus:
+        
         h3 
-          span.billiard-ball 
+          .feature-bullet 
             i.fa.fa-check.fa-color 
           | Recurring payments
           .badge.badge-danger.primary-color NEW
         h3
-          span.billiard-ball
+          .feature-bullet
             i.fa.fa-check.fa-color
           | Dashboard access
         h3
-          span.billiard-ball 
+          .feature-bullet 
             i.fa.fa-check.fa-color
           | Payment analytics 
         h3
-          span.billiard-ball 
+          .feature-bullet 
             i.fa.fa-check.fa-color
           | Priority Enterprise support 
       
 
       div.center#contact
             
-        a.btn.btn-primary.btn-lg.btn-bg-primary href="mailto:sales@benefitjs.com" 
+        a.btn.btn-primary href="mailto:sales@benefitjs.com" 
           | Contact Sales
 
   .row
-    div.div-center.center      
+    div.center.center
       h2.fa-color Ready to get started?
-      button.btn.btn-primary.btn-lg.btn-bg-primary.center onclick="javascript:checkLogged()" 
+      button.btn.btn-primary onclick="javascript:checkLogged()" 
         | Get Started >
