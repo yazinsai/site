@@ -198,6 +198,14 @@ video {
   border-color: #c4bbbc;
 }
 
+.col-fast {
+  background-image: url("../images/fast.svg");
+  background-size: contain;
+  background-position: center 50px;
+  background-repeat: no-repeat;
+  min-height: 360px;
+}
+
 .code-sample {
   text-align: left;
 
