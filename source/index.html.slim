@@ -12,7 +12,7 @@ javascript:
       method: "GET",
       credentials: "include"
     }
-    
+
     return new Promise((resolve, reject) => {
       fetch(`${BASE_URL}${endpoint}`, Object.assign(DEFAULT_OPTIONS, options))
         .then(response => resolve(response.json())) // includes 4xx/5xx responses
@@ -37,12 +37,12 @@ javascript:
         setPage(screenName)
         break;
       case 'upload':
-      $('#h-live').attr("href", "javascript:setScreen('live')");  
+      $('#h-live').attr("href", "javascript:setScreen('live')");
         setHeader(1)
         setPage('upload')
         break;
       case 'live':
-        $('#h-upload').attr("href", "javascript:setScreen('upload')"); 
+        $('#h-upload').attr("href", "javascript:setScreen('upload')");
         retrieveKeys()
         setHeader(2)
         setPage('live')
@@ -57,11 +57,11 @@ javascript:
   }
 
   function setHeader(stepNum) {
-    const steps = document.querySelectorAll(".step")    
-    
+    const steps = document.querySelectorAll(".step")
+
     for (i = 0; i < steps.length; i++) {
       i == stepNum ?
-        steps[i].classList.add('active') :        
+        steps[i].classList.add('active') :
         steps[i].classList.remove('active')
     }
   }
@@ -80,25 +80,25 @@ javascript:
   }
 
   function isError(result) {
-    if (result.object == "error"){     
-      showError(result.message) 
+    if (result.object == "error"){
+      showError(result.message)
       return true;
     }
     return false;
   }
 
   function checkLogged() {
-    callApi("/users/logged").then(result => {      
+    callApi("/users/logged").then(result => {
       if (result.status == "success") {
-        // Logged in already                      
-        setScreen('upload'); 
+        // Logged in already
+        setScreen('upload');
       } else {
         setScreen('register');
       }
 
       $('#startModal').modal('show')
-    })    
-  
+    })
+
   }
 
   window.addEventListener('DOMContentLoaded', function(e) {
@@ -112,7 +112,7 @@ javascript:
 
   function registrationHandler(e) {
     e.preventDefault(); // prevent submission
-    showError(""); 
+    showError("");
 
     callApi("/users/register", {
       method: "POST",
@@ -132,12 +132,12 @@ javascript:
       method: "POST",
       body: new FormData(frmLogin)
     }).then(result => {
-      if (!isError(result)) {  
-       setScreen('upload');  
+      if (!isError(result)) {
+       setScreen('upload');
      }
     })
   }
-   
+
   function uploadHandler(e) {
     e.preventDefault(); // prevent submission
     showError("");
@@ -146,10 +146,10 @@ javascript:
       method: "POST",
       body: new FormData(frmUpload),
     }).then(result => {
-      if (!isError(result)){           
+      if (!isError(result)){
         $("p#pk-field").text(result.data);
         document.getElementById("#public-key").innerText =  result.data;
-        setScreen('live');         
+        setScreen('live');
       }
     })
   }
@@ -170,13 +170,13 @@ javascript:
   }
 
   function retrieveKeys() {
-    callApi("/users/keys").then(result => {       
+    callApi("/users/keys").then(result => {
       if (!isError(result)){
         $("p#pk-field").text("");
-        for (i = 0; i < result.data.length; i++) {            
+        for (i = 0; i < result.data.length; i++) {
           $("p#pk-field").append('<p>'+ result.data[i].alias +'<\p>' +
                                  '<p>'+ result.data[i].public_key +'<\p><hr>');
-        }     
+        }
         $("key#pk-pk").text(result.data[result.data.length-1].public_key);
       }
     })
@@ -185,14 +185,14 @@ javascript:
 
 /! Modal
 #startModal.modal role="dialog" tabindex="-1" data-backdrop="static"
-  .modal-dialog role="document" 
+  .modal-dialog role="document"
     .modal-content
       .modal-title
-        div       
-          button.close-button data-dismiss="modal" 
+        div
+          button.close-button data-dismiss="modal"
               img src="images/close.svg" /
         /! the display inline to avoid step-header blocking the close button
-        .container.fluid-width.step-header style=('display:inline;') 
+        .container.fluid-width.step-header style=('display:inline;')
           .row
             .col
               a#h-register.step.active Register
@@ -209,42 +209,42 @@ javascript:
             input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
             button.btn.btn-primary type="submit" Continue
 
-            hr              
+            hr
             a href="javascript:setScreen('login');"
               | Already a Member? Login
-        
+
         #page-login.page
           form#frmLogin
             p.h4.mb-4
             input.form-control.mb-4 type="email" id="email" name="email" placeholder="E-mail"
             input.form-control type="password" id="password" name="password" placeholder="Password" aria-describedby="passwordHelpBlock"
-            
-            button.btn.btn-primary type="submit" Continue 
+
+            button.btn.btn-primary type="submit" Continue
 
             hr
             p New User?
             a href="javascript:setScreen('register');"
               em Sign up
-        
+
         #page-upload.page
           form#frmUpload
             .input-group
               .input-group-prepend
-                span.input-group-text id="inputGroupFileAddon01" Upload               
+                span.input-group-text id="inputGroupFileAddon01" Upload
                 input.custom-file-input type="file" name="cgnFile" id="cgnFile" aria-describedby="inputGroupFileAddon01"
                 label.custom-file-label for="inputGroupFile01" Upload CGN
-            
+
             button.btn.btn-primary type="submit" Continue
-        
-        #page-live.page        
+
+        #page-live.page
           h3.primary-color Your public key(s):
           p id="pk-field"
-          
+
           p.code.primary-color id="pk-code"
           pre.code
             =partial "code-sample", locals: { key: "<span id='public-key'></span>" }
-          
-          
+
+
 /! Main content
 .container.above-the-fold
   .row
@@ -257,7 +257,7 @@ javascript:
 
   .row
     .col-md.text-center.text-md-left.my-md-auto
-      h1 The easiest way to accept BENEFIT 
+      h1 The easiest way to accept BENEFIT
       p Accept online debit card payments in Bahrain effortlessly.
 
       /! Hidden on mobile
@@ -265,11 +265,11 @@ javascript:
         button.btn.btn-primary onclick="javascript:checkLogged();" Get Started
         span &nbsp;
         button.btn.btn-secondary data-target="#startModal" data-toggle="modal" Try it
-    
+
     .col-md.center
-      video(playsinline autoplay loop)
+      video(playsinline autoplay loop muted)
         source src="images/benefitjs-checkout.mp4" type="video/mp4"
-  
+
   .row.d-md-none
     /! Only visible on mobile
     .col-md.center
@@ -283,17 +283,17 @@ javascript:
       h2 Painless, one-step integration
       .code-sample
         =partial "code-sample", locals: { key: "..." }
-      
+
       img.arrow src="images/arrow-down.svg"
 
-      form#donate action="/pay" method="POST" 
+      form#donate action="/pay" method="POST"
         script src="https://fast.benefitjs.com" data-title="Tarbeia.org" data-subtitle="100 fils Donation" data-button-text="Donate BD 0.1" data-key="donation-to-tarbeia-org" data-transaction-id="19201" data-amount="0.1"
 
-      p 
-        i.fa.fa-info-circle &nbsp; 
-        | This is a 
-        strong live demo 
-        | of BenefitJS. 
+      p
+        i.fa.fa-info-circle &nbsp;
+        | This is a
+        strong live demo
+        | of BenefitJS.
         br
         | Donations go to Tarbeia.org
 
@@ -303,17 +303,17 @@ javascript:
       .col-md.col-fast
 
       .col-md.my-auto
-        h2.text-center.text-md-left 
-          | Unbelievably 
-          em fast...          
+        h2.text-center.text-md-left
+          | Unbelievably
+          em fast...
         p
-          | Your customers can now finish their transactions in record time, 
-          strong reducing churn 
-          | on the checkout page. 
+          | Your customers can now finish their transactions in record time,
+          strong reducing churn
+          | on the checkout page.
           | Forget about slow redirects, and cryptic error messages.
-        p 
-          | With BenefitJS, sales are closed in 
-          em seconds.  
+        p
+          | With BenefitJS, sales are closed in
+          em seconds.
 
 .container
   .row
@@ -326,17 +326,17 @@ javascript:
         img.feature.active src="images/feature-masked.svg" style="top:210px;left:20px;"
 
     .col-md.order-md-0.my-auto
-      h2.text-center.text-md-left Beautifully crafted user experience 
+      h2.text-center.text-md-left Beautifully crafted user experience
       p
-        | Your customer will feel right at home with the checkout button. 
+        | Your customer will feel right at home with the checkout button.
         | BenefitJS seemlessly integrates with your website with a simple script
-      p Design your app or website however you like.  
-      
-  
+      p Design your app or website however you like.
+
+
   .row
     .col.center
       button.btn.btn-primary onclick="javascript:checkLogged()" Start Now &gt;
-  
+
   #howto.row
     .col.center
         h2 How it works
@@ -351,28 +351,28 @@ javascript:
 
         .item
           .number 2
-          .title Upload your CGN file        
-          p Choose and Upload the CGN file you want to use to accept payments on your site. 
-          
+          .title Upload your CGN file
+          p Choose and Upload the CGN file you want to use to accept payments on your site.
+
         .item
           .number 3
-          .title Go Live!        
-          p You will get a snippet that you can add to your website and thats it.   
+          .title Go Live!
+          p You will get a snippet that you can add to your website and thats it.
 
-  
+
   .row
     .col.center
       button.btn.btn-primary onclick="javascript:checkLogged()" Get Started >
-        
+
   #pricing.row
     .col.center
       h2 Pricing
-  
+
   .row.mb-2
     .col-md.center
       p.primary-color.center.regular-font style="font-size:22px"
-        | The 
-        strong Basic 
+        | The
+        strong Basic
         | Plan
 
       .d-inline-block.text-left
@@ -387,23 +387,23 @@ javascript:
         h3
           .feature-bullet
             i.fa.fa-check.fa-color
-          | Easy integration, zero setup    
+          | Easy integration, zero setup
 
       .center style="padding-bottom: 2rem;"
         button.btn.btn-primary onclick="javascript:checkLogged()" Start Free >
 
     .col-md.center.pattern
       p.primary-color.center.regular-font style="font-size:22px"
-        | The 
-        strong Premium 
+        | The
+        strong Premium
         | Plan
 
-      .d-inline-block.text-left     
+      .d-inline-block.text-left
         .center Everything in the Basic plan, plus:
-        
-        h3 
-          .feature-bullet 
-            i.fa.fa-check.fa-color 
+
+        h3
+          .feature-bullet
+            i.fa.fa-check.fa-color
           | Recurring payments
           .badge.badge-danger.primary-color NEW
         h3
@@ -411,22 +411,22 @@ javascript:
             i.fa.fa-check.fa-color
           | Dashboard access
         h3
-          .feature-bullet 
+          .feature-bullet
             i.fa.fa-check.fa-color
-          | Payment analytics 
+          | Payment analytics
         h3
-          .feature-bullet 
+          .feature-bullet
             i.fa.fa-check.fa-color
-          | Priority Enterprise support 
-      
+          | Priority Enterprise support
+
 
       div.center#contact
-            
-        a.btn.btn-primary href="mailto:sales@benefitjs.com" 
+
+        a.btn.btn-primary href="mailto:sales@benefitjs.com"
           | Contact Sales
 
   .row
     div.center.center
       h2.fa-color Ready to get started?
-      button.btn.btn-primary onclick="javascript:checkLogged()" 
+      button.btn.btn-primary onclick="javascript:checkLogged()"
         | Get Started >
