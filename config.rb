@@ -5,9 +5,6 @@
 require "slim"
 Slim::Engine.options[:pretty] = true
 
-# WhatsApp number we're using with Fluffems
-config[:whatsapp] = "97338031709"
-
 activate :autoprefixer do |prefix|
   prefix.browsers = "last 2 versions"
 end
